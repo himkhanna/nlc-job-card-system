@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Eye, EyeOff, LogIn, FlaskConical } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { useAuth } from '../context/AuthContext'
 
 const DEMO_USERS = [
   { email: 'admin@nlc.demo',      role: 'Admin',      warehouses: 'All warehouses' },
@@ -9,7 +10,9 @@ const DEMO_USERS = [
 ]
 
 export default function Login() {
-  const navigate = useNavigate()
+  const navigate  = useNavigate()
+  const location  = useLocation()
+  const { login } = useAuth()
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [showPw, setShowPw]     = useState(false)
@@ -22,16 +25,13 @@ export default function Login() {
       return
     }
     setLoading(true)
-    // Demo auth — replace with POST /api/auth/login once backend is live
-    await new Promise(r => setTimeout(r, 800))
-    if (
-      (email === 'admin@nlc.demo' || email === 'supervisor@nlc.demo') &&
-      password === 'NLC@demo2025'
-    ) {
-      toast.success(`Welcome back! Logged in as ${email.split('@')[0]}.`)
-      navigate('/')
+    const { ok, error } = await login(email, password)
+    if (ok) {
+      toast.success(`Welcome back!`)
+      const from = location.state?.from?.pathname ?? '/'
+      navigate(from, { replace: true })
     } else {
-      toast.error('Invalid credentials. Use the demo accounts below.')
+      toast.error(error ?? 'Invalid credentials.')
     }
     setLoading(false)
   }
