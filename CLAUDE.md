@@ -18,8 +18,8 @@ reporting.
 
 ## TECH STACK
 
-- **Frontend:** React 18 + Vite + Tailwind CSS
-- **Backend/DB:** Supabase (Postgres + Auth + Realtime)
+### Frontend
+- **Framework:** React 18 + Vite + Tailwind CSS
 - **Routing:** React Router v6
 - **Data fetching:** TanStack Query (React Query v5)
 - **Charts:** Recharts
@@ -27,6 +27,30 @@ reporting.
 - **CSV export:** PapaParse
 - **Icons:** Lucide React
 - **Notifications:** react-hot-toast
+- **Auth:** JWT stored in httpOnly cookie or memory; sent as `Authorization: Bearer {jwt}`
+- **API base:** `VITE_API_URL=https://api.nlc.yourdomain.com`
+
+### Backend
+- **Runtime:** ASP.NET Core .NET 9 — Minimal API pattern
+- **ORM:** Entity Framework Core 9 — PostgreSQL provider
+- **Database:** PostgreSQL 16 — primary database
+- **Cache:** Redis (Valkey) — session cache
+- **Background jobs:** Hangfire — ERP push, GRN trigger
+- **Validation:** FluentValidation — request validation
+- **Logging:** Serilog + Seq — structured logging
+- **Auth:** JWT Bearer auth — role claims in token
+
+### Backend API Routes
+| Prefix | Purpose |
+|---|---|
+| `/api/auth` | Login, refresh, logout |
+| `/api/jobs` | Job card CRUD + phase actions |
+| `/api/workers` | Worker registry + clock events |
+| `/api/planning` | Planning slots + calendar |
+| `/api/reports` | Aggregated report queries |
+| `/api/warehouses` | Warehouse management |
+| `/api/erp` | ERP integration stubs (Phase 1) |
+| `/api/webhooks` | Inbound ERP signals |
 
 ---
 
@@ -68,15 +92,27 @@ textMuted:  #6B7A94
 
 ## FOLDER STRUCTURE
 
+### Frontend
 ```
 src/
   components/       Shared UI components (Badge, KPICard, Modal, etc.)
   pages/            One file per route
   hooks/            Custom React hooks (useWarehouse, useAuth, etc.)
-  lib/              supabase.js, api helpers, pdf/csv utilities
+  lib/              api.js (axios/fetch wrapper), pdf/csv utilities
   context/          AuthContext.jsx, WarehouseContext.jsx
-supabase/
-  migrations/       SQL files to run in Supabase
+```
+
+### Backend
+```
+src/
+  NLC.API/           Minimal API endpoints (route handlers, middleware, DI setup)
+  NLC.Core/          Domain models, interfaces, enums
+  NLC.Infrastructure/ EF Core DbContext, repositories, ERP HTTP client, Redis
+  NLC.Application/   Business logic services, FluentValidation validators
+tests/
+  NLC.UnitTests/
+  NLC.IntegrationTests/
+migrations/          EF Core migration files
 ```
 
 ---
@@ -228,10 +264,16 @@ supabase/
 - synced_at (timestamptz)
 - error_message (text)
 
-### profiles (extends auth.users)
-- id (uuid, PK = auth.uid())
+### users
+- id (uuid, PK)
+- email (text, unique)
+- password_hash (text)
 - role (text: admin | supervisor | tally_user | viewer)
 - assigned_warehouse_ids (uuid[])
+- is_active (boolean)
+- created_at (timestamptz)
+
+*Auth is JWT Bearer. Role and warehouse claims are embedded in the token.*
 
 ---
 
@@ -362,14 +404,17 @@ All in src/components/:
 
 ## ERP INTEGRATION (PHASE 1 — STUBS ONLY)
 
-All ERP calls are mock/stub in Phase 1. Implement as async functions in src/lib/erp.js
-that simulate 1.5s delay and return mock success/failure. Log every call to erp_sync_log.
+All ERP calls are stub handlers in `NLC.API` that simulate 1.5s delay and return mock
+success/failure. Every call is logged to `erp_sync_log` via a Hangfire background job.
 
-Stub endpoints:
-- GET /api/erp/planning — returns mock planning slots
-- GET /api/erp/tally/:jobId — returns mock SKU tally data
-- POST /api/erp/push/:jobId — simulates pushing phase completion to ERP
-- POST /api/webhook/tally-complete/:jobId — simulates ERP confirming tally done
+Backend stub endpoints (in `/api/erp` and `/api/webhooks`):
+- `GET /api/erp/planning` — returns mock planning slots
+- `GET /api/erp/tally/{jobId}` — returns mock SKU tally data
+- `POST /api/erp/push/{jobId}` — simulates pushing phase completion to ERP
+- `POST /api/webhooks/tally-complete/{jobId}` — simulates ERP confirming tally done
+
+GRN trigger and ERP push are dispatched as **Hangfire background jobs** (not inline),
+so the API response is immediate and the job logs success/failure asynchronously.
 
 In Settings > System Config: ERP API URL field and "Test Connection" button.
 In Planning Calendar: "Sync Now" button calls the planning stub.
@@ -381,23 +426,33 @@ In Job Card Detail > ERP Sync tab: Push and Pull buttons per job.
 
 Build in this exact order. Do not skip steps. Confirm each compiles before proceeding.
 
-1. Project scaffold (Vite + React + Tailwind + all dependencies)
-2. Tailwind config with NLC color tokens
-3. Supabase SQL migrations + seed data
-4. App shell (App.jsx routes + Layout + Sidebar + PageHeader)
-5. AuthContext + WarehouseContext + ProtectedRoute
-6. Login page
-7. All shared components
-8. Dashboard page
-9. Job Cards list page
-10. Job Card Detail page (most complex — take care with tabs and phase logic)
-11. Planning Calendar page
-12. Workforce page
-13. Reports page
-14. Supervisor Floor view (/supervisor — mobile-first)
-15. Settings page
-16. Final polish (skeletons, empty states, animations, demo banner)
-17. Production build + deployment config
+### Backend (build first)
+1. .NET 9 solution scaffold (NLC.API, NLC.Core, NLC.Infrastructure, NLC.Application, tests)
+2. EF Core DbContext + all entity models + PostgreSQL migrations + seed data
+3. JWT auth — login/refresh/logout endpoints, role claims, middleware
+4. Domain services + FluentValidation validators (job, worker, planning)
+5. All API endpoint handlers (jobs, workers, planning, reports, warehouses, erp, webhooks)
+6. Hangfire setup — GRN trigger job, ERP push job, tally-complete webhook handler
+7. Redis session cache integration
+8. Serilog + Seq structured logging wired throughout
+
+### Frontend (build after backend is running)
+9. Vite + React 18 + Tailwind scaffold + all npm dependencies
+10. Tailwind config with NLC color tokens + DM Sans/DM Mono fonts
+11. App shell — App.jsx routes + Layout + Sidebar + PageHeader
+12. AuthContext (JWT) + WarehouseContext + ProtectedRoute
+13. Login page
+14. All shared components (13 components in src/components/)
+15. Dashboard page
+16. Job Cards list page
+17. Job Card Detail page (most complex — tabs, phase logic, clock events)
+18. Planning Calendar page
+19. Workforce page
+20. Reports page
+21. Supervisor Floor view (/supervisor — mobile-first)
+22. Settings page
+23. Final polish (skeletons, empty states, animations, demo banner)
+24. Production build + deployment config (Netlify frontend + backend hosting)
 
 ---
 
@@ -413,12 +468,16 @@ Build in this exact order. Do not skip steps. Confirm each compiles before proce
 
 ## DEPLOYMENT TARGET
 
-- **Primary:** Netlify (frontend static hosting)
-- **DB/Auth:** Supabase (cloud, region: Europe West or Asia)
-- **Future production:** Azure Static Web Apps + Azure-hosted Supabase or Azure SQL
-- Include netlify.toml, _redirects, and .env.example in the project
+- **Frontend:** Netlify (static hosting) — netlify.toml + public/_redirects (SPA fallback)
+- **Backend:** Azure App Service or Docker container — ASP.NET Core .NET 9
+- **Database:** PostgreSQL 16 — Azure Database for PostgreSQL or self-hosted
+- **Cache:** Redis (Valkey) — Azure Cache for Redis
+- **Background jobs:** Hangfire dashboard at `/hangfire` (admin-only, behind JWT policy)
+- **Logging:** Seq instance (self-hosted or Seq Cloud)
+- **Future production:** Azure Static Web Apps + Azure-hosted backend
+- Include netlify.toml, _redirects, .env.example (frontend) and appsettings.json template (backend)
 
 ---
 
 *Project brief prepared by IDC Technologies for Neelkamal Group / NLC Logistics.*
-*CLAUDE.md version: 2.0 | Incorporates full customer feedback from NLC POC review call.*
+*CLAUDE.md version: 3.0 | Backend revised: Supabase replaced by ASP.NET Core .NET 9 + EF Core + PostgreSQL + Redis + Hangfire.*
