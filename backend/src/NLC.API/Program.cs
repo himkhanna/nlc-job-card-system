@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLC.API.Auth;
+using NLC.API.Endpoints;
+using NLC.Infrastructure.Services;
 using NLC.Infrastructure.Auth;
 using NLC.Infrastructure.Data;
 using StackExchange.Redis;
@@ -48,6 +50,7 @@ builder.Services.AddAuthorization(opts =>
 // ── App Services ──────────────────────────────────────────────────────────────
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<JobCardService>();
 
 // ── CORS ──────────────────────────────────────────────────────────────────────
 builder.Services.AddCors(opts =>
@@ -73,6 +76,7 @@ app.UseAuthorization();
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 app.MapAuthEndpoints();
+app.MapJobEndpoints();
 
 app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))
    .AllowAnonymous();
