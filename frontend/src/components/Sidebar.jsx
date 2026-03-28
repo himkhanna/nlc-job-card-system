@@ -11,6 +11,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 
 const NAV_ITEMS = [
   { to: '/',           label: 'Dashboard',     icon: LayoutDashboard },
@@ -28,6 +29,7 @@ const BOTTOM_ITEMS = [
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
   const location = useLocation()
+  const { isAdmin } = useAuth()
 
   return (
     <aside
@@ -124,7 +126,7 @@ export default function Sidebar() {
 
       {/* Bottom items */}
       <div style={{ padding: '12px 0', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-        {BOTTOM_ITEMS.map(({ to, label, icon: Icon }) => {
+        {BOTTOM_ITEMS.filter(item => item.to !== '/settings' || isAdmin).map(({ to, label, icon: Icon }) => {
           const isActive = location.pathname.startsWith(to)
           return (
             <NavLink

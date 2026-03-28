@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Plus, Edit2, Check, X, ToggleLeft, ToggleRight, Link, AlertCircle, Eye, EyeOff } from 'lucide-react'
+import { Plus, Edit2, Check, X, ToggleLeft, ToggleRight, Link, AlertCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Badge from '../components/Badge'
 import Modal from '../components/Modal'
 import DemoModeBanner from '../components/DemoModeBanner'
+import UserManagement from './UserManagement'
 
 // ── Demo data ─────────────────────────────────────────────────────────────────
 const INIT_WAREHOUSES = [
@@ -19,10 +20,6 @@ const INIT_CONFIGS = [
   { id: 'cfg2', name: 'OUTBOUND', phases: ['Order & Pick List','PDA Picking','Dispatch Tally','Loading','Complete'], vasOptional: false, grnTriggerPhase: null, erpPushPhase: 'Loading', isActive: true },
 ]
 
-const INIT_USERS = [
-  { id: 'u1', email: 'admin@nlc.demo',      name: 'Admin User',      role: 'admin',      warehouses: [],                  isActive: true  },
-  { id: 'u2', email: 'supervisor@nlc.demo', name: 'Supervisor User', role: 'supervisor', warehouses: ['DXB-WH1','DXB-WH2'], isActive: true  },
-]
 
 const INIT_ERP = { erpApiUrl: 'https://erp.nlc-demo.ae/api/v2', laborRateAed: 50, demoMode: true }
 
@@ -50,142 +47,6 @@ export default function Settings() {
       {activeTab === 'Warehouse Setup'  && <WarehouseSetup />}
       {activeTab === 'Job Type Config'  && <JobTypeConfigTab />}
       {activeTab === 'System Config'    && <SystemConfig />}
-    </div>
-  )
-}
-
-// ── User Management ───────────────────────────────────────────────────────────
-function UserManagement() {
-  const [users, setUsers]         = useState(INIT_USERS)
-  const [showModal, setShowModal] = useState(false)
-  const [form, setForm]           = useState({ email: '', name: '', password: '', role: 'supervisor', warehouses: [] })
-  const [showPw, setShowPw]       = useState(false)
-
-  const ALL_WH = ['DXB-WH1','DXB-WH2','DXB-WH3','SHJ-WH1','ABU-WH1']
-
-  function toggleWh(wh) {
-    setForm(f => ({ ...f, warehouses: f.warehouses.includes(wh) ? f.warehouses.filter(w => w !== wh) : [...f.warehouses, wh] }))
-  }
-
-  function handleCreate(e) {
-    e.preventDefault()
-    setUsers(prev => [...prev, { id: Date.now().toString(), email: form.email, name: form.name, role: form.role, warehouses: form.warehouses, isActive: true }])
-    setShowModal(false)
-    setForm({ email: '', name: '', password: '', role: 'supervisor', warehouses: [] })
-    toast.success(`User ${form.name} created`)
-  }
-
-  function toggleActive(id) {
-    setUsers(prev => prev.map(u => u.id === id ? { ...u, isActive: !u.isActive } : u))
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-[#6B7A94]">{users.length} users — admins have full access, supervisors are scoped to assigned warehouses.</p>
-        <button onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[#FF6B00] rounded-lg hover:bg-orange-600 transition-colors">
-          <Plus size={14} /> Add User
-        </button>
-      </div>
-
-      <div className="bg-white rounded-xl border border-[#E8ECF2] overflow-hidden">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-[#F4F6FA] text-xs font-semibold text-[#6B7A94] uppercase tracking-wide">
-              <th className="px-5 py-3 text-left">Name</th>
-              <th className="px-5 py-3 text-left">Email</th>
-              <th className="px-5 py-3 text-left">Role</th>
-              <th className="px-5 py-3 text-left">Warehouses</th>
-              <th className="px-5 py-3 text-left">Status</th>
-              <th className="px-5 py-3 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#E8ECF2]">
-            {users.map(u => (
-              <tr key={u.id} className="hover:bg-[#F4F6FA]/50 transition-colors">
-                <td className="px-5 py-3 font-medium text-[#1A2440]">{u.name}</td>
-                <td className="px-5 py-3 font-mono text-xs text-[#6B7A94]">{u.email}</td>
-                <td className="px-5 py-3"><Badge variant={u.role} /></td>
-                <td className="px-5 py-3 text-xs text-[#6B7A94]">
-                  {u.role === 'admin' ? 'All warehouses' : u.warehouses.join(', ') || '—'}
-                </td>
-                <td className="px-5 py-3">
-                  <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${u.isActive ? 'bg-[#E8F5E9] text-[#2E7D32]' : 'bg-[#F4F6FA] text-[#6B7A94]'}`}>
-                    {u.isActive ? 'Active' : 'Inactive'}
-                  </span>
-                </td>
-                <td className="px-5 py-3">
-                  <button onClick={() => toggleActive(u.id)}
-                    className="text-xs text-[#1565C0] hover:underline">
-                    {u.isActive ? 'Deactivate' : 'Activate'}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <Modal open={showModal} onClose={() => setShowModal(false)} title="Add User" size="md">
-        <form onSubmit={handleCreate} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Full Name *</label>
-            <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-              className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]"
-              placeholder="Full name" required />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Email *</label>
-            <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-              className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]"
-              placeholder="user@nlc.ae" required />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Password *</label>
-            <div className="relative">
-              <input type={showPw ? 'text' : 'password'} value={form.password}
-                onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                className="w-full px-3 py-2 pr-10 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]"
-                placeholder="Min 8 characters" minLength={8} required />
-              <button type="button" onClick={() => setShowPw(p => !p)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7A94]">
-                {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
-              </button>
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Role *</label>
-            <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}
-              className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]">
-              <option value="admin">Admin</option>
-              <option value="supervisor">Supervisor</option>
-              <option value="tally_user">Tally User</option>
-              <option value="viewer">Viewer</option>
-            </select>
-          </div>
-          {form.role !== 'admin' && (
-            <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-2">Assigned Warehouses</label>
-              <div className="flex flex-wrap gap-2">
-                {ALL_WH.map(wh => (
-                  <button key={wh} type="button" onClick={() => toggleWh(wh)}
-                    className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
-                      form.warehouses.includes(wh) ? 'bg-[#0B1D3A] text-white border-[#0B1D3A]' : 'text-[#6B7A94] border-[#E8ECF2] hover:border-[#0B1D3A]'}`}>
-                    {wh}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-          <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={() => setShowModal(false)}
-              className="px-4 py-2 text-sm font-medium text-[#6B7A94] border border-[#E8ECF2] rounded-lg hover:bg-gray-50">Cancel</button>
-            <button type="submit"
-              className="px-5 py-2 text-sm font-semibold text-white bg-[#FF6B00] rounded-lg hover:bg-orange-600 transition-colors">Create User</button>
-          </div>
-        </form>
-      </Modal>
     </div>
   )
 }
