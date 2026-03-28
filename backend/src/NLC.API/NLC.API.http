@@ -1,0 +1,6 @@
+@NLC.API_HostAddress = http://localhost:5144
+
+GET {{NLC.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
