@@ -43,7 +43,7 @@ reporting.
 ### Backend API Routes
 | Prefix | Purpose |
 |---|---|
-| `/api/auth` | Login, refresh, logout |
+| `/api/auth` | Login, refresh, logout, user management (admin) |
 | `/api/jobs` | Job card CRUD + phase actions |
 | `/api/workers` | Worker registry + clock events |
 | `/api/planning` | Planning slots + calendar |
@@ -450,9 +450,110 @@ Build in this exact order. Do not skip steps. Confirm each compiles before proce
 19. Workforce page
 20. Reports page
 21. Supervisor Floor view (/supervisor — mobile-first)
-22. Settings page
+22. Settings page (see SETTINGS PAGE SPEC below)
 23. Final polish (skeletons, empty states, animations, demo banner)
 24. Production build + deployment config (Netlify frontend + backend hosting)
+
+---
+
+## SETTINGS PAGE SPEC (Admin only — /settings)
+
+Settings.jsx uses a **left tab navigation** layout with 4 tabs:
+
+---
+
+### Tab 1: User Management
+Manage system users (admin only). Backend: `GET/POST/PUT/DELETE /api/auth/users`.
+
+**User list table columns:** Name/Email · Role badge · Assigned Warehouses · Status (Active/Inactive) · Actions
+
+**Actions per user:**
+- **Edit** — change role, toggle active, reassign warehouses (modal)
+- **Reset Password** — admin sets a new temporary password
+- **Deactivate / Reactivate** — soft delete (sets `is_active = false`)
+
+**Invite New User button** (top right) — opens modal:
+- Email address
+- Role dropdown (admin / supervisor / tally_user / viewer)
+- Assign Warehouses (multi-select, only shown for supervisor / tally_user)
+- Temporary password (auto-generated, shown once)
+
+**Rules:**
+- Admin cannot deactivate their own account
+- Supervisor and tally_user must have at least one warehouse assigned
+- Display current logged-in user with "(You)" label
+
+---
+
+### Tab 2: Warehouse Management
+Manage warehouse registry. Backend: `GET/POST/PUT/PATCH /api/warehouses`.
+
+**Warehouse list table columns:** Name (e.g. DXB-WH1) · Location · Status (Active/Inactive) · Job Count · Actions
+
+**Actions per warehouse:**
+- **Edit** — change name and location (modal)
+- **Toggle Active/Inactive** — inactive warehouses hidden from all dropdowns and filters
+
+**Add New Warehouse button** — opens modal:
+- Warehouse Name (e.g. DXB-WH4) — required, must be unique
+- Location (e.g. Dubai Airport Freezone) — required
+
+**Rules:**
+- Cannot deactivate a warehouse that has IN_PROGRESS jobs
+- Show warning if deactivating warehouse with PLANNED jobs
+
+---
+
+### Tab 3: Job Type Config
+Manage phase sequences for INBOUND and OUTBOUND job types.
+Backend: `GET/PUT /api/settings/job-type-configs`.
+
+**Per job type config card:**
+- Config name (INBOUND / OUTBOUND)
+- Phase sequence — drag-to-reorder list with add/remove phase buttons
+- VAS Optional toggle (INBOUND only)
+- GRN Trigger Phase dropdown (select from phases list)
+- ERP Push Phase dropdown (select from phases list)
+- Active/Inactive toggle
+
+**Warning banner:** "Changes to phase sequences only affect new job cards. Existing jobs use their phases_snapshot."
+
+---
+
+### Tab 4: System Config
+Backend: `GET/PUT /api/settings/system-config`. Config stored in a `system_config` key–value table or appsettings override.
+
+| Setting | Type | Default | Description |
+|---|---|---|---|
+| Labor Rate | Number (AED/hr) | 50 | Used for all labor cost calculations |
+| ERP API URL | Text | — | Base URL for ERP integration |
+| ERP API Key | Password field | — | Bearer token for ERP calls |
+| Test Connection | Button | — | Calls `POST /api/erp/test` and shows result |
+| Job Number Prefix | Text | JC | Auto-gen job number prefix |
+| Job Number Year | Auto | Current year | Read-only, shown for reference |
+
+---
+
+### Backend endpoints for Settings
+
+```
+GET    /api/auth/users              — list all users (admin only)
+POST   /api/auth/users              — invite/create user
+PUT    /api/auth/users/{id}         — update role/warehouses/active
+DELETE /api/auth/users/{id}         — deactivate user
+
+GET    /api/warehouses              — list warehouses
+POST   /api/warehouses              — create warehouse
+PUT    /api/warehouses/{id}         — update warehouse
+PATCH  /api/warehouses/{id}/toggle  — toggle active status
+
+GET    /api/settings/job-type-configs      — get all configs
+PUT    /api/settings/job-type-configs/{id} — update config
+
+GET    /api/settings/system-config   — get all key-value settings
+PUT    /api/settings/system-config   — update settings (batch)
+POST   /api/erp/test                 — test ERP connection
+```
 
 ---
 
@@ -480,4 +581,4 @@ Build in this exact order. Do not skip steps. Confirm each compiles before proce
 ---
 
 *Project brief prepared by IDC Technologies for Neelkamal Group / NLC Logistics.*
-*CLAUDE.md version: 3.0 | Backend revised: Supabase replaced by ASP.NET Core .NET 9 + EF Core + PostgreSQL + Redis + Hangfire.*
+*CLAUDE.md version: 3.1 | Settings page expanded: User Management + Warehouse Setup tabs added with full spec and backend endpoints.*
