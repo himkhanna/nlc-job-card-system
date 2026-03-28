@@ -51,6 +51,9 @@ builder.Services.AddAuthorization(opts =>
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<JobCardService>();
+builder.Services.AddScoped<WorkerService>();
+builder.Services.AddScoped<PlanningService>();
+builder.Services.AddScoped<SettingsService>();
 
 // ── CORS ──────────────────────────────────────────────────────────────────────
 builder.Services.AddCors(opts =>
@@ -77,6 +80,10 @@ app.UseAuthorization();
 // ── Routes ────────────────────────────────────────────────────────────────────
 app.MapAuthEndpoints();
 app.MapJobEndpoints();
+app.MapWorkerEndpoints();
+app.MapPlanningEndpoints();
+app.MapSettingsEndpoints();
+app.MapErpEndpoints();
 
 app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))
    .AllowAnonymous();

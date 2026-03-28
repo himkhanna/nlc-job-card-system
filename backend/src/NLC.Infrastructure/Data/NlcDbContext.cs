@@ -174,13 +174,13 @@ public class NlcDbContext(DbContextOptions<NlcDbContext> options) : DbContext(op
         b.Entity<AppUser>().HasData(
             new AppUser
             {
-                Id = adminId, Email = "admin@nlc.demo",
+                Id = adminId, Email = "admin@nlc.demo", Name = "Admin User",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("NLC@demo2025"),
                 Role = UserRole.admin, AssignedWarehouseIds = []
             },
             new AppUser
             {
-                Id = supId, Email = "supervisor@nlc.demo",
+                Id = supId, Email = "supervisor@nlc.demo", Name = "Supervisor User",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("NLC@demo2025"),
                 Role = UserRole.supervisor, AssignedWarehouseIds = [wh1, wh2]
             }
@@ -197,14 +197,14 @@ public class NlcDbContext(DbContextOptions<NlcDbContext> options) : DbContext(op
         var wrk1 = Guid.Parse("44444444-0000-0000-0000-000000000008");
 
         b.Entity<Worker>().HasData(
-            new Worker { Id = emp1, Name = "Rajan Pillai",        ErpId = "EMP-001", WorkerType = WorkerType.PERMANENT, Skills = ["Forklift"],                 AssignedWarehouseIds = [wh1] },
-            new Worker { Id = emp2, Name = "Sabu Thomas",         ErpId = "EMP-002", WorkerType = WorkerType.PERMANENT, Skills = ["Loading", "VAS"],           AssignedWarehouseIds = [wh1] },
-            new Worker { Id = emp3, Name = "Ramesh Kumar",        ErpId = "EMP-003", WorkerType = WorkerType.PERMANENT, Skills = ["Tally"],                    AssignedWarehouseIds = [wh1] },
-            new Worker { Id = emp4, Name = "Jose Fernandez",      ErpId = "EMP-004", WorkerType = WorkerType.PERMANENT, Skills = ["Supervision"],              AssignedWarehouseIds = [wh1, wh2] },
-            new Worker { Id = emp5, Name = "Arjun Nair",          ErpId = "EMP-005", WorkerType = WorkerType.CONTRACT,  Skills = ["Loading", "PDA Picking"],   AssignedWarehouseIds = [wh2] },
-            new Worker { Id = emp6, Name = "Priya Menon",         ErpId = "EMP-006", WorkerType = WorkerType.PERMANENT, Skills = ["Tally"],                    AssignedWarehouseIds = [wh2, wh5] },
-            new Worker { Id = emp7, Name = "Mohammed Al Rashid",  ErpId = "EMP-007", WorkerType = WorkerType.PERMANENT, Skills = ["Supervision"],              AssignedWarehouseIds = [wh5] },
-            new Worker { Id = wrk1, Name = "Worker-1",            ErpId = "WRK-001", WorkerType = WorkerType.AD_HOC,   Skills = ["Loading"],                  AssignedWarehouseIds = [wh1] }
+            new Worker { Id = emp1, Name = "Rajan Pillai",        EmployeeId = "EMP-001", WorkerType = WorkerType.PERMANENT, Skills = ["Forklift"],                 AssignedWarehouseIds = [wh1] },
+            new Worker { Id = emp2, Name = "Sabu Thomas",         EmployeeId = "EMP-002", WorkerType = WorkerType.PERMANENT, Skills = ["Loading", "VAS"],           AssignedWarehouseIds = [wh1] },
+            new Worker { Id = emp3, Name = "Ramesh Kumar",        EmployeeId = "EMP-003", WorkerType = WorkerType.PERMANENT, Skills = ["Tally"],                    AssignedWarehouseIds = [wh1] },
+            new Worker { Id = emp4, Name = "Jose Fernandez",      EmployeeId = "EMP-004", WorkerType = WorkerType.PERMANENT, Skills = ["Supervision"],              AssignedWarehouseIds = [wh1, wh2] },
+            new Worker { Id = emp5, Name = "Arjun Nair",          EmployeeId = "EMP-005", WorkerType = WorkerType.CONTRACT,  Skills = ["Loading", "PDA Picking"],   AssignedWarehouseIds = [wh2] },
+            new Worker { Id = emp6, Name = "Priya Menon",         EmployeeId = "EMP-006", WorkerType = WorkerType.PERMANENT, Skills = ["Tally"],                    AssignedWarehouseIds = [wh2, wh5] },
+            new Worker { Id = emp7, Name = "Mohammed Al Rashid",  EmployeeId = "EMP-007", WorkerType = WorkerType.PERMANENT, Skills = ["Supervision"],              AssignedWarehouseIds = [wh5] },
+            new Worker { Id = wrk1, Name = "Worker-1",            EmployeeId = "WRK-001", WorkerType = WorkerType.AD_HOC,   Skills = ["Loading"],                  AssignedWarehouseIds = [wh1] }
         );
 
         // Demo Job Cards

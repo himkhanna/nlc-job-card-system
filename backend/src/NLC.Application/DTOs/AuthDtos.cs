@@ -14,6 +14,7 @@ public record RefreshRequest(string RefreshToken);
 public record UserDto(
     Guid   Id,
     string Email,
+    string Name,
     string Role,
     Guid[] AssignedWarehouseIds
 );

@@ -33,7 +33,7 @@ public class AuthService(NlcDbContext db, TokenService tokens, IConnectionMultip
             accessToken,
             refreshToken,
             DateTime.UtcNow.AddMinutes(60),
-            new UserDto(user.Id, user.Email, user.Role.ToString(), user.AssignedWarehouseIds)
+            new UserDto(user.Id, user.Email, user.Name, user.Role.ToString(), user.AssignedWarehouseIds)
         );
     }
 
@@ -63,7 +63,7 @@ public class AuthService(NlcDbContext db, TokenService tokens, IConnectionMultip
             newAccess,
             newRefresh,
             DateTime.UtcNow.AddMinutes(60),
-            new UserDto(user.Id, user.Email, user.Role.ToString(), user.AssignedWarehouseIds)
+            new UserDto(user.Id, user.Email, user.Name, user.Role.ToString(), user.AssignedWarehouseIds)
         );
     }
 

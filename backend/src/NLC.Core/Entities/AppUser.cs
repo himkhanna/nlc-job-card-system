@@ -6,6 +6,7 @@ public class AppUser
 {
     public Guid      Id                   { get; set; } = Guid.NewGuid();
     public string    Email                { get; set; } = default!;
+    public string    Name                 { get; set; } = default!;
     public string    PasswordHash         { get; set; } = default!;
     public UserRole  Role                 { get; set; } = UserRole.viewer;
     public Guid[]    AssignedWarehouseIds { get; set; } = [];
