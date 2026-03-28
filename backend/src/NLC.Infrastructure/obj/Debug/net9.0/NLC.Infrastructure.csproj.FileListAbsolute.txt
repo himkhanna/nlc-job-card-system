@@ -16,3 +16,5 @@ C:\Users\himanshu\nlc-job-card-system\backend\src\NLC.Infrastructure\obj\Debug\n
 C:\Users\himanshu\nlc-job-card-system\backend\src\NLC.Infrastructure\obj\Debug\net9.0\NLC.Infrastructure.pdb
 C:\Users\himanshu\nlc-job-card-system\backend\src\NLC.Infrastructure\obj\Debug\net9.0\NLC.Infrastructure.genruntimeconfig.cache
 C:\Users\himanshu\nlc-job-card-system\backend\src\NLC.Infrastructure\obj\Debug\net9.0\ref\NLC.Infrastructure.dll
+C:\Users\himanshu\nlc-job-card-system\backend\src\NLC.Infrastructure\bin\Debug\net9.0\NLC.Application.dll
+C:\Users\himanshu\nlc-job-card-system\backend\src\NLC.Infrastructure\bin\Debug\net9.0\NLC.Application.pdb

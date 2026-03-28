@@ -156,6 +156,14 @@
             "FluentValidation": {
               "target": "Package",
               "version": "[11.11.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.3, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.3.4, )"
             }
           },
           "imports": [
@@ -259,6 +267,9 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
+              "C:\\Users\\himanshu\\nlc-job-card-system\\backend\\src\\NLC.Application\\NLC.Application.csproj": {
+                "projectPath": "C:\\Users\\himanshu\\nlc-job-card-system\\backend\\src\\NLC.Application\\NLC.Application.csproj"
+              },
               "C:\\Users\\himanshu\\nlc-job-card-system\\backend\\src\\NLC.Core\\NLC.Core.csproj": {
                 "projectPath": "C:\\Users\\himanshu\\nlc-job-card-system\\backend\\src\\NLC.Core\\NLC.Core.csproj"
               }

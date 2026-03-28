@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NLC.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2fb7b64642d92fece2440eeb03845c2a903a1d3c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+32cefc9b154a2e22118830f31f3fed71df4c3d84")]
 [assembly: System.Reflection.AssemblyProductAttribute("NLC.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NLC.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

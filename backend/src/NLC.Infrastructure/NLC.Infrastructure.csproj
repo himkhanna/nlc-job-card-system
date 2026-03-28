@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NLC.Core\NLC.Core.csproj" />
+    <ProjectReference Include="..\NLC.Application\NLC.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

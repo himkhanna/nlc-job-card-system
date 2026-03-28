@@ -104,3 +104,12 @@ C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\obj\Debug\net9
 C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\obj\Debug\net9.0\NLC.UnitTests.pdb
 C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\obj\Debug\net9.0\NLC.UnitTests.genruntimeconfig.cache
 C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\obj\Debug\net9.0\ref\NLC.UnitTests.dll
+C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\bin\Debug\net9.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll
+C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\himanshu\nlc-job-card-system\backend\tests\NLC.UnitTests\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
