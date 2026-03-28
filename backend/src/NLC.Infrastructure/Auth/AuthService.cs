@@ -22,12 +22,16 @@ public class AuthService(NlcDbContext db, TokenService tokens, IConnectionMultip
         var refreshToken = tokens.GenerateRefreshToken();
         var expiry       = tokens.RefreshTokenExpiry;
 
-        // Store refresh token in Redis: key = refresh:{token}, value = userId, TTL = expiry
-        await _cache.StringSetAsync(
-            $"{RefreshPrefix}{refreshToken}",
-            user.Id.ToString(),
-            expiry - DateTime.UtcNow
-        );
+        // Store refresh token in Redis (best-effort — continues if Redis is unavailable)
+        try
+        {
+            await _cache.StringSetAsync(
+                $"{RefreshPrefix}{refreshToken}",
+                user.Id.ToString(),
+                expiry - DateTime.UtcNow
+            );
+        }
+        catch { /* Redis unavailable in dev — access token still works */ }
 
         return new LoginResponse(
             accessToken,
@@ -39,36 +43,41 @@ public class AuthService(NlcDbContext db, TokenService tokens, IConnectionMultip
 
     public async Task<LoginResponse?> RefreshAsync(string refreshToken)
     {
-        var userIdStr = await _cache.StringGetAsync($"{RefreshPrefix}{refreshToken}");
-        if (userIdStr.IsNullOrEmpty) return null;
+        try
+        {
+            var userIdStr = await _cache.StringGetAsync($"{RefreshPrefix}{refreshToken}");
+            if (userIdStr.IsNullOrEmpty) return null;
 
-        var userId = Guid.Parse(userIdStr!);
-        var user   = await db.Users.FindAsync(userId);
-        if (user is null || !user.IsActive) return null;
+            var userId = Guid.Parse(userIdStr!);
+            var user   = await db.Users.FindAsync(userId);
+            if (user is null || !user.IsActive) return null;
 
-        // Rotate: delete old, issue new
-        await _cache.KeyDeleteAsync($"{RefreshPrefix}{refreshToken}");
+            // Rotate: delete old, issue new
+            await _cache.KeyDeleteAsync($"{RefreshPrefix}{refreshToken}");
 
-        var newAccess  = tokens.GenerateAccessToken(user);
-        var newRefresh = tokens.GenerateRefreshToken();
-        var expiry     = tokens.RefreshTokenExpiry;
+            var newAccess  = tokens.GenerateAccessToken(user);
+            var newRefresh = tokens.GenerateRefreshToken();
+            var expiry     = tokens.RefreshTokenExpiry;
 
-        await _cache.StringSetAsync(
-            $"{RefreshPrefix}{newRefresh}",
-            user.Id.ToString(),
-            expiry - DateTime.UtcNow
-        );
+            await _cache.StringSetAsync(
+                $"{RefreshPrefix}{newRefresh}",
+                user.Id.ToString(),
+                expiry - DateTime.UtcNow
+            );
 
-        return new LoginResponse(
-            newAccess,
-            newRefresh,
-            DateTime.UtcNow.AddMinutes(60),
-            new UserDto(user.Id, user.Email, user.Name, user.Role.ToString(), user.AssignedWarehouseIds)
-        );
+            return new LoginResponse(
+                newAccess,
+                newRefresh,
+                DateTime.UtcNow.AddMinutes(60),
+                new UserDto(user.Id, user.Email, user.Name, user.Role.ToString(), user.AssignedWarehouseIds)
+            );
+        }
+        catch { return null; }
     }
 
     public async Task LogoutAsync(string refreshToken)
     {
-        await _cache.KeyDeleteAsync($"{RefreshPrefix}{refreshToken}");
+        try { await _cache.KeyDeleteAsync($"{RefreshPrefix}{refreshToken}"); }
+        catch { /* best-effort */ }
     }
 }

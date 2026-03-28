@@ -16,9 +16,14 @@ builder.Services.AddDbContext<NlcDbContext>(opts =>
     opts.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // ── Redis ─────────────────────────────────────────────────────────────────────
+// abortConnect=false so the app starts even if Redis is unavailable (dev/CI)
 builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
-    ConnectionMultiplexer.Connect(
-        builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379"));
+{
+    var cs = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+    if (!cs.Contains("abortConnect", StringComparison.OrdinalIgnoreCase))
+        cs += ",abortConnect=false";
+    return ConnectionMultiplexer.Connect(cs);
+});
 
 // ── JWT Auth ──────────────────────────────────────────────────────────────────
 var jwtSecret = builder.Configuration["Jwt:Secret"]
