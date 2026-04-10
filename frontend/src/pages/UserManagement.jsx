@@ -34,11 +34,11 @@ const DEMO_USERS = [
 
 function WarehousPills({ whIds, role }) {
   if (role === 'admin') return <span className="text-xs text-[#2E7D32] font-medium">All warehouses</span>
-  if (!whIds?.length)   return <span className="text-xs text-[#6B7A94]">—</span>
+  if (!whIds?.length)   return <span className="text-xs text-[#505D7B]">—</span>
   return (
     <div className="flex flex-wrap gap-1">
       {whIds.map(id => (
-        <span key={id} className="px-1.5 py-0.5 text-xs rounded bg-[#E3F0FF] text-[#1565C0] font-medium font-mono">{id}</span>
+        <span key={id} className="px-1.5 py-0.5 text-xs rounded bg-[#E3F0FF] text-[#07847F] font-medium font-mono">{id}</span>
       ))}
     </div>
   )
@@ -146,14 +146,14 @@ export default function UserManagement() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-[#1A2440]">Users &amp; Roles</h2>
-          <p className="text-sm text-[#6B7A94] mt-0.5">
+          <h2 className="text-lg font-bold text-[#01323F]">Users &amp; Roles</h2>
+          <p className="text-sm text-[#505D7B] mt-0.5">
             Manage system access. Supervisors and Tally Users are scoped to assigned warehouses.
             {isError && <span className="text-[#F57F17] ml-2">· Demo data (API unavailable)</span>}
           </p>
         </div>
         <button onClick={() => setShowAdd(true)}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[#FF6B00] rounded-lg hover:bg-orange-600 transition-colors whitespace-nowrap">
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[#FF7D44] rounded-lg hover:bg-orange-600 transition-colors whitespace-nowrap">
           <Plus size={14} /> Add User
         </button>
       </div>
@@ -161,15 +161,15 @@ export default function UserManagement() {
       {/* Role reference cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {Object.entries(ROLE_LABELS).map(([key, label]) => (
-          <div key={key} className="bg-white rounded-xl border border-[#E8ECF2] p-4">
+          <div key={key} className="bg-white rounded-xl border border-[#DDE8EC] p-4">
             <div className="mb-2"><Badge variant={key} /></div>
-            <p className="text-xs text-[#6B7A94] leading-relaxed">{ROLE_DESC[key]}</p>
+            <p className="text-xs text-[#505D7B] leading-relaxed">{ROLE_DESC[key]}</p>
           </div>
         ))}
       </div>
 
       {/* Users table */}
-      <div className="bg-white rounded-xl border border-[#E8ECF2] overflow-hidden">
+      <div className="bg-white rounded-xl border border-[#DDE8EC] overflow-hidden">
         {isLoading ? (
           <div className="p-6"><LoadingSkeleton height={200} /></div>
         ) : users.length === 0 ? (
@@ -177,7 +177,7 @@ export default function UserManagement() {
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-[#F4F6FA] text-xs font-semibold text-[#6B7A94] uppercase tracking-wide">
+              <tr className="bg-[#F2F8FA] text-xs font-semibold text-[#505D7B] uppercase tracking-wide">
                 <th className="px-5 py-3 text-left">Name</th>
                 <th className="px-5 py-3 text-left">Email</th>
                 <th className="px-5 py-3 text-left">Role</th>
@@ -186,38 +186,38 @@ export default function UserManagement() {
                 <th className="px-5 py-3 text-left">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E8ECF2]">
+            <tbody className="divide-y divide-[#DDE8EC]">
               {users.map(u => (
-                <tr key={u.id} className="hover:bg-[#F4F6FA]/50 transition-colors">
+                <tr key={u.id} className="hover:bg-[#F2F8FA]/50 transition-colors">
                   <td className="px-5 py-3">
-                    <div className="font-medium text-[#1A2440]">
+                    <div className="font-medium text-[#01323F]">
                       {u.name}
-                      {u.id === me?.id && <span className="ml-1.5 text-xs text-[#6B7A94] font-normal">(You)</span>}
+                      {u.id === me?.id && <span className="ml-1.5 text-xs text-[#505D7B] font-normal">(You)</span>}
                     </div>
                   </td>
-                  <td className="px-5 py-3 font-mono text-xs text-[#6B7A94]">{u.email}</td>
+                  <td className="px-5 py-3 font-mono text-xs text-[#505D7B]">{u.email}</td>
                   <td className="px-5 py-3"><Badge variant={u.role} /></td>
                   <td className="px-5 py-3">
                     <WarehousPills whIds={u.assignedWarehouseIds} role={u.role} />
                   </td>
                   <td className="px-5 py-3">
                     <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full ${
-                      u.isActive ? 'bg-[#E8F5E9] text-[#2E7D32]' : 'bg-[#F4F6FA] text-[#6B7A94]'}`}>
+                      u.isActive ? 'bg-[#E8F5E9] text-[#2E7D32]' : 'bg-[#F2F8FA] text-[#505D7B]'}`}>
                       {u.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </td>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-2">
                       <button onClick={() => openEdit(u)}
-                        className="flex items-center gap-1 text-xs font-medium text-[#1565C0] hover:underline">
+                        className="flex items-center gap-1 text-xs font-medium text-[#07847F] hover:underline">
                         <Edit2 size={12} /> Edit
                       </button>
-                      <span className="text-[#E8ECF2]">|</span>
+                      <span className="text-[#DDE8EC]">|</span>
                       <button onClick={() => { setResetUser(u); setNewPw('') }}
-                        className="flex items-center gap-1 text-xs font-medium text-[#6B7A94] hover:text-[#1A2440] hover:underline">
+                        className="flex items-center gap-1 text-xs font-medium text-[#505D7B] hover:text-[#01323F] hover:underline">
                         <KeyRound size={12} /> Reset PW
                       </button>
-                      <span className="text-[#E8ECF2]">|</span>
+                      <span className="text-[#DDE8EC]">|</span>
                       <button onClick={() => handleToggleActive(u)}
                         disabled={u.id === me?.id}
                         className={`flex items-center gap-1 text-xs font-medium hover:underline disabled:opacity-40 disabled:cursor-not-allowed ${
@@ -238,11 +238,11 @@ export default function UserManagement() {
         footer={
           <>
             <button type="button" onClick={() => setShowAdd(false)}
-              className="px-4 py-2 text-sm font-medium text-[#6B7A94] border border-[#E8ECF2] rounded-lg hover:bg-gray-50">
+              className="px-4 py-2 text-sm font-medium text-[#505D7B] border border-[#DDE8EC] rounded-lg hover:bg-gray-50">
               Cancel
             </button>
             <button form="add-user-form" type="submit" disabled={saving}
-              className="px-5 py-2 text-sm font-semibold text-white bg-[#FF6B00] rounded-lg hover:bg-orange-600 disabled:opacity-60 transition-colors">
+              className="px-5 py-2 text-sm font-semibold text-white bg-[#FF7D44] rounded-lg hover:bg-orange-600 disabled:opacity-60 transition-colors">
               {saving ? 'Creating…' : 'Create User'}
             </button>
           </>
@@ -250,35 +250,35 @@ export default function UserManagement() {
         <form id="add-user-form" onSubmit={handleAdd} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Full Name *</label>
+              <label className="block text-xs font-semibold text-[#505D7B] mb-1">Full Name *</label>
               <input value={addForm.name} onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))}
                 required placeholder="e.g. Rajan Pillai"
-                className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]" />
+                className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Email *</label>
+              <label className="block text-xs font-semibold text-[#505D7B] mb-1">Email *</label>
               <input type="email" value={addForm.email} onChange={e => setAddForm(f => ({ ...f, email: e.target.value }))}
                 required placeholder="user@nlc.ae"
-                className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]" />
+                className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]" />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Temporary Password *</label>
+            <label className="block text-xs font-semibold text-[#505D7B] mb-1">Temporary Password *</label>
             <div className="relative">
               <input type={showPw ? 'text' : 'password'} value={addForm.password}
                 onChange={e => setAddForm(f => ({ ...f, password: e.target.value }))}
                 required minLength={8} placeholder="Min 8 characters"
-                className="w-full px-3 py-2 pr-10 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]" />
+                className="w-full px-3 py-2 pr-10 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]" />
               <button type="button" onClick={() => setShowPw(p => !p)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7A94]">
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#505D7B]">
                 {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
               </button>
             </div>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Role *</label>
+            <label className="block text-xs font-semibold text-[#505D7B] mb-1">Role *</label>
             <select value={addForm.role} onChange={e => setAddForm(f => ({ ...f, role: e.target.value, assignedWarehouseIds: [] }))}
-              className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0] bg-white">
+              className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F] bg-white">
               <option value="admin">Admin — Full access</option>
               <option value="supervisor">Supervisor — Warehouse scoped</option>
               <option value="tally_user">Tally User — Tally phase only</option>
@@ -287,7 +287,7 @@ export default function UserManagement() {
           </div>
           {addForm.role !== 'admin' && (
             <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-2">
+              <label className="block text-xs font-semibold text-[#505D7B] mb-2">
                 Assigned Warehouses
                 {(addForm.role === 'supervisor' || addForm.role === 'tally_user') && ' *'}
               </label>
@@ -297,8 +297,8 @@ export default function UserManagement() {
                     onClick={() => toggleWh(addForm, setAddForm, wh)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors font-mono ${
                       addForm.assignedWarehouseIds.includes(wh)
-                        ? 'bg-[#0B1D3A] text-white border-[#0B1D3A]'
-                        : 'text-[#6B7A94] border-[#E8ECF2] hover:border-[#0B1D3A] hover:text-[#0B1D3A]'}`}>
+                        ? 'bg-[#1C3F39] text-white border-[#1C3F39]'
+                        : 'text-[#505D7B] border-[#DDE8EC] hover:border-[#1C3F39] hover:text-[#1C3F39]'}`}>
                     {wh}
                   </button>
                 ))}
@@ -313,11 +313,11 @@ export default function UserManagement() {
         footer={
           <>
             <button type="button" onClick={() => setEditUser(null)}
-              className="px-4 py-2 text-sm font-medium text-[#6B7A94] border border-[#E8ECF2] rounded-lg hover:bg-gray-50">
+              className="px-4 py-2 text-sm font-medium text-[#505D7B] border border-[#DDE8EC] rounded-lg hover:bg-gray-50">
               Cancel
             </button>
             <button form="edit-user-form" type="submit" disabled={saving}
-              className="px-5 py-2 text-sm font-semibold text-white bg-[#1565C0] rounded-lg hover:bg-blue-700 disabled:opacity-60 transition-colors">
+              className="px-5 py-2 text-sm font-semibold text-white bg-[#07847F] rounded-lg hover:bg-blue-700 disabled:opacity-60 transition-colors">
               {saving ? 'Saving…' : 'Save Changes'}
             </button>
           </>
@@ -325,16 +325,16 @@ export default function UserManagement() {
         {editForm && (
           <form id="edit-user-form" onSubmit={handleEdit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Full Name</label>
+              <label className="block text-xs font-semibold text-[#505D7B] mb-1">Full Name</label>
               <input value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
-                className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]" />
+                className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Role</label>
+              <label className="block text-xs font-semibold text-[#505D7B] mb-1">Role</label>
               <select value={editForm.role}
                 onChange={e => setEditForm(f => ({ ...f, role: e.target.value, assignedWarehouseIds: [] }))}
                 disabled={editUser?.id === me?.id}
-                className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0] bg-white disabled:bg-[#F4F6FA] disabled:text-[#6B7A94]">
+                className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F] bg-white disabled:bg-[#F2F8FA] disabled:text-[#505D7B]">
                 <option value="admin">Admin — Full access</option>
                 <option value="supervisor">Supervisor — Warehouse scoped</option>
                 <option value="tally_user">Tally User — Tally phase only</option>
@@ -346,15 +346,15 @@ export default function UserManagement() {
             </div>
             {editForm.role !== 'admin' && (
               <div>
-                <label className="block text-xs font-semibold text-[#6B7A94] mb-2">Assigned Warehouses</label>
+                <label className="block text-xs font-semibold text-[#505D7B] mb-2">Assigned Warehouses</label>
                 <div className="flex flex-wrap gap-2">
                   {ALL_WH.map(wh => (
                     <button key={wh} type="button"
                       onClick={() => toggleWh(editForm, setEditForm, wh)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors font-mono ${
                         editForm.assignedWarehouseIds.includes(wh)
-                          ? 'bg-[#0B1D3A] text-white border-[#0B1D3A]'
-                          : 'text-[#6B7A94] border-[#E8ECF2] hover:border-[#0B1D3A] hover:text-[#0B1D3A]'}`}>
+                          ? 'bg-[#1C3F39] text-white border-[#1C3F39]'
+                          : 'text-[#505D7B] border-[#DDE8EC] hover:border-[#1C3F39] hover:text-[#1C3F39]'}`}>
                       {wh}
                     </button>
                   ))}
@@ -370,7 +370,7 @@ export default function UserManagement() {
         footer={
           <>
             <button type="button" onClick={() => setResetUser(null)}
-              className="px-4 py-2 text-sm font-medium text-[#6B7A94] border border-[#E8ECF2] rounded-lg hover:bg-gray-50">
+              className="px-4 py-2 text-sm font-medium text-[#505D7B] border border-[#DDE8EC] rounded-lg hover:bg-gray-50">
               Cancel
             </button>
             <button form="reset-pw-form" type="submit" disabled={saving}
@@ -380,18 +380,18 @@ export default function UserManagement() {
           </>
         }>
         <form id="reset-pw-form" onSubmit={handleResetPw} className="space-y-4">
-          <p className="text-sm text-[#6B7A94]">
-            Set a new temporary password for <strong className="text-[#1A2440]">{resetUser?.email}</strong>. The user should change it on next login.
+          <p className="text-sm text-[#505D7B]">
+            Set a new temporary password for <strong className="text-[#01323F]">{resetUser?.email}</strong>. The user should change it on next login.
           </p>
           <div>
-            <label className="block text-xs font-semibold text-[#6B7A94] mb-1">New Password *</label>
+            <label className="block text-xs font-semibold text-[#505D7B] mb-1">New Password *</label>
             <div className="relative">
               <input type={showNewPw ? 'text' : 'password'} value={newPw}
                 onChange={e => setNewPw(e.target.value)}
                 required minLength={8} placeholder="Min 8 characters"
-                className="w-full px-3 py-2 pr-10 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#C62828]" />
+                className="w-full px-3 py-2 pr-10 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#C62828]" />
               <button type="button" onClick={() => setShowNewPw(p => !p)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7A94]">
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#505D7B]">
                 {showNewPw ? <EyeOff size={14} /> : <Eye size={14} />}
               </button>
             </div>

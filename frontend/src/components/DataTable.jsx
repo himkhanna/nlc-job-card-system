@@ -35,11 +35,11 @@ export default function DataTable({
   const paginated  = sorted.slice((page - 1) * pageSize, page * pageSize)
 
   return (
-    <div style={{ fontFamily: 'DM Sans, sans-serif' }}>
-      <div style={{ overflowX: 'auto', borderRadius: 12, border: '1px solid #E8ECF2', background: '#fff' }}>
+    <div style={{ fontFamily: 'Roboto, sans-serif' }}>
+      <div style={{ overflowX: 'auto', borderRadius: 12, border: '1px solid #DDE8EC', background: '#fff' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
           <thead>
-            <tr style={{ background: '#F8F9FC', borderBottom: '1px solid #E8ECF2' }}>
+            <tr style={{ background: '#F8F9FC', borderBottom: '1px solid #DDE8EC' }}>
               {columns.map(col => (
                 <th
                   key={col.key}
@@ -49,7 +49,7 @@ export default function DataTable({
                     textAlign: 'left',
                     fontSize: 11,
                     fontWeight: 700,
-                    color: '#6B7A94',
+                    color: '#505D7B',
                     letterSpacing: '0.5px',
                     textTransform: 'uppercase',
                     cursor: col.sortable ? 'pointer' : 'default',
@@ -73,7 +73,7 @@ export default function DataTable({
           <tbody>
             {loading ? (
               Array.from({ length: 5 }).map((_, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid #F4F6FA' }}>
+                <tr key={i} style={{ borderBottom: '1px solid #F2F8FA' }}>
                   {columns.map(col => (
                     <td key={col.key} style={{ padding: '12px 16px' }}>
                       <LoadingSkeleton width="80%" height={14} />
@@ -93,7 +93,7 @@ export default function DataTable({
                   key={row.id ?? i}
                   onClick={() => onRowClick?.(row)}
                   style={{
-                    borderBottom: i < paginated.length - 1 ? '1px solid #F4F6FA' : 'none',
+                    borderBottom: i < paginated.length - 1 ? '1px solid #F2F8FA' : 'none',
                     cursor: onRowClick ? 'pointer' : 'default',
                     transition: 'background 0.1s',
                   }}
@@ -101,7 +101,7 @@ export default function DataTable({
                   onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
                 >
                   {columns.map(col => (
-                    <td key={col.key} style={{ padding: '12px 16px', fontSize: 13, color: '#1A2440', verticalAlign: 'middle' }}>
+                    <td key={col.key} style={{ padding: '12px 16px', fontSize: 13, color: '#01323F', verticalAlign: 'middle' }}>
                       {col.render ? col.render(row[col.key], row) : row[col.key] ?? '—'}
                     </td>
                   ))}
@@ -114,7 +114,7 @@ export default function DataTable({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 14, fontSize: 13, color: '#6B7A94' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 14, fontSize: 13, color: '#505D7B' }}>
           <span>{sorted.length} records · Page {page} of {totalPages}</span>
           <div style={{ display: 'flex', gap: 6 }}>
             {[...Array(totalPages)].map((_, i) => (
@@ -123,11 +123,11 @@ export default function DataTable({
                 onClick={() => setPage(i + 1)}
                 style={{
                   width: 30, height: 30, borderRadius: 7,
-                  border: '1px solid ' + (page === i + 1 ? '#1565C0' : '#E8ECF2'),
-                  background: page === i + 1 ? '#1565C0' : '#fff',
-                  color: page === i + 1 ? '#fff' : '#1A2440',
+                  border: '1px solid ' + (page === i + 1 ? '#07847F' : '#DDE8EC'),
+                  background: page === i + 1 ? '#07847F' : '#fff',
+                  color: page === i + 1 ? '#fff' : '#01323F',
                   cursor: 'pointer', fontSize: 13, fontWeight: page === i + 1 ? 700 : 400,
-                  fontFamily: 'DM Sans, sans-serif',
+                  fontFamily: 'Roboto, sans-serif',
                 }}
               >
                 {i + 1}

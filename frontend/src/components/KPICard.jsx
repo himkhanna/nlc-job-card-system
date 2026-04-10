@@ -1,8 +1,8 @@
-export default function KPICard({ label, value, icon: Icon, color = '#1565C0', subtext, trend }) {
+export default function KPICard({ label, value, icon: Icon, color = '#07847F', subtext, trend }) {
   return (
     <div style={{
       background: '#fff',
-      border: '1px solid #E8ECF2',
+      border: '1px solid #DDE8EC',
       borderRadius: 12,
       padding: '20px 24px',
       display: 'flex',
@@ -26,14 +26,14 @@ export default function KPICard({ label, value, icon: Icon, color = '#1565C0', s
 
       {/* Content */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ margin: '0 0 4px', fontSize: 12, color: '#6B7A94', fontFamily: 'DM Sans, sans-serif', fontWeight: 500 }}>
+        <p style={{ margin: '0 0 4px', fontSize: 12, color: '#505D7B', fontFamily: 'Roboto, sans-serif', fontWeight: 500 }}>
           {label}
         </p>
-        <p style={{ margin: 0, fontSize: 26, fontWeight: 700, color: '#1A2440', fontFamily: 'DM Sans, sans-serif', lineHeight: 1 }}>
+        <p style={{ margin: 0, fontSize: 26, fontWeight: 700, color: '#01323F', fontFamily: 'Roboto, sans-serif', lineHeight: 1 }}>
           {value ?? '—'}
         </p>
         {subtext && (
-          <p style={{ margin: '4px 0 0', fontSize: 12, color: '#6B7A94', fontFamily: 'DM Sans, sans-serif' }}>
+          <p style={{ margin: '4px 0 0', fontSize: 12, color: '#505D7B', fontFamily: 'Roboto, sans-serif' }}>
             {subtext}
           </p>
         )}

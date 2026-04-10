@@ -2,9 +2,9 @@ import { Check, Circle, Clock, SkipForward } from 'lucide-react'
 
 const STATUS_CONFIG = {
   COMPLETED:   { icon: Check,        color: '#2E7D32', bg: '#E8F5E9', border: '#2E7D32' },
-  IN_PROGRESS: { icon: Clock,        color: '#FF6B00', bg: '#FFF3E0', border: '#FF6B00' },
+  IN_PROGRESS: { icon: Clock,        color: '#FF7D44', bg: '#FFF3E0', border: '#FF7D44' },
   SKIPPED:     { icon: SkipForward,  color: '#9E9E9E', bg: '#F5F5F5', border: '#E0E0E0' },
-  PENDING:     { icon: Circle,       color: '#B0BEC5', bg: '#F4F6FA', border: '#E8ECF2' },
+  PENDING:     { icon: Circle,       color: '#B0BEC5', bg: '#F2F8FA', border: '#DDE8EC' },
 }
 
 export default function PhaseTracker({ phases = [], currentPhase, phaseLogs = [] }) {
@@ -45,7 +45,7 @@ export default function PhaseTracker({ phases = [], currentPhase, phaseLogs = []
                   width: 2,
                   flex: 1,
                   minHeight: 24,
-                  background: status === 'COMPLETED' ? '#2E7D32' : '#E8ECF2',
+                  background: status === 'COMPLETED' ? '#2E7D32' : '#DDE8EC',
                   margin: '2px 0',
                 }} />
               )}
@@ -57,14 +57,14 @@ export default function PhaseTracker({ phases = [], currentPhase, phaseLogs = []
                 <span style={{
                   fontSize: 14,
                   fontWeight: status === 'IN_PROGRESS' ? 700 : 500,
-                  color: status === 'PENDING' || status === 'SKIPPED' ? '#9E9E9E' : '#1A2440',
-                  fontFamily: 'DM Sans, sans-serif',
+                  color: status === 'PENDING' || status === 'SKIPPED' ? '#9E9E9E' : '#01323F',
+                  fontFamily: 'Roboto, sans-serif',
                 }}>
                   {phase}
                 </span>
                 {status === 'IN_PROGRESS' && (
                   <span style={{
-                    fontSize: 10, fontWeight: 700, color: '#FF6B00',
+                    fontSize: 10, fontWeight: 700, color: '#FF7D44',
                     background: '#FFF3E0', padding: '1px 7px', borderRadius: 20,
                   }}>ACTIVE</span>
                 )}
@@ -76,7 +76,7 @@ export default function PhaseTracker({ phases = [], currentPhase, phaseLogs = []
                 )}
               </div>
               {phaseLogs.find(l => l.phase_name === phase)?.completed_at && (
-                <p style={{ margin: '2px 0 0', fontSize: 11, color: '#6B7A94', fontFamily: 'DM Mono, monospace' }}>
+                <p style={{ margin: '2px 0 0', fontSize: 11, color: '#505D7B', fontFamily: 'DM Mono, monospace' }}>
                   Completed {new Date(phaseLogs.find(l => l.phase_name === phase).completed_at).toLocaleString()}
                 </p>
               )}

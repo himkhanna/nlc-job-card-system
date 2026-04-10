@@ -4,7 +4,6 @@ import toast from 'react-hot-toast'
 import Badge from '../components/Badge'
 import Modal from '../components/Modal'
 import WarehouseBadge from '../components/WarehouseBadge'
-import DemoModeBanner from '../components/DemoModeBanner'
 
 // ── Demo data ─────────────────────────────────────────────────────────────────
 const TODAY = new Date('2026-03-28')
@@ -113,40 +112,39 @@ export default function PlanningCalendar() {
 
   return (
     <div className="space-y-4">
-      <DemoModeBanner />
 
       {/* Toolbar */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
-          <button onClick={prevWeek} className="p-2 rounded-lg border border-[#E8ECF2] bg-white hover:bg-gray-50 transition-colors">
+          <button onClick={prevWeek} className="p-2 rounded-lg border border-[#DDE8EC] bg-white hover:bg-gray-50 transition-colors">
             <ChevronLeft size={16} />
           </button>
-          <span className="text-sm font-semibold text-[#1A2440] min-w-[220px] text-center">
+          <span className="text-sm font-semibold text-[#01323F] min-w-[220px] text-center">
             {dayLabel(days[0])} — {dayLabel(days[6])}
           </span>
-          <button onClick={nextWeek} className="p-2 rounded-lg border border-[#E8ECF2] bg-white hover:bg-gray-50 transition-colors">
+          <button onClick={nextWeek} className="p-2 rounded-lg border border-[#DDE8EC] bg-white hover:bg-gray-50 transition-colors">
             <ChevronRight size={16} />
           </button>
-          <button onClick={goToday} className="px-3 py-1.5 text-xs font-medium text-[#6B7A94] border border-[#E8ECF2] bg-white rounded-lg hover:bg-gray-50">
+          <button onClick={goToday} className="px-3 py-1.5 text-xs font-medium text-[#505D7B] border border-[#DDE8EC] bg-white rounded-lg hover:bg-gray-50">
             Today
           </button>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={handleErpSync} disabled={syncing}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#1565C0] border border-[#1565C0] bg-white rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-60">
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#07847F] border border-[#07847F] bg-white rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-60">
             <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} />
             Sync ERP
           </button>
           <button onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[#FF6B00] rounded-lg hover:bg-orange-600 transition-colors">
+            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[#FF7D44] rounded-lg hover:bg-orange-600 transition-colors">
             <Plus size={14} /> New Slot
           </button>
         </div>
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-4 text-xs text-[#6B7A94]">
-        {[['#3B82F6','Planned'],['#F59E0B','Confirmed'],['#FF6B00','Arrived'],['#2E7D32','Job Created']].map(([c,l]) => (
+      <div className="flex items-center gap-4 text-xs text-[#505D7B]">
+        {[['#3B82F6','Planned'],['#F59E0B','Confirmed'],['#FF7D44','Arrived'],['#2E7D32','Job Created']].map(([c,l]) => (
           <div key={l} className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: c }} />
             <span>{l}</span>
@@ -161,27 +159,27 @@ export default function PlanningCalendar() {
           const isToday   = dateStr === fmtDate(TODAY)
           const daySlots  = slotsForDay(day)
           return (
-            <div key={dateStr} className={`min-h-[180px] rounded-xl border p-2 ${isToday ? 'border-[#FF6B00] bg-orange-50/30' : 'border-[#E8ECF2] bg-white'}`}>
-              <div className={`text-xs font-semibold mb-2 ${isToday ? 'text-[#FF6B00]' : 'text-[#6B7A94]'}`}>
+            <div key={dateStr} className={`min-h-[180px] rounded-xl border p-2 ${isToday ? 'border-[#FF7D44] bg-orange-50/30' : 'border-[#DDE8EC] bg-white'}`}>
+              <div className={`text-xs font-semibold mb-2 ${isToday ? 'text-[#FF7D44]' : 'text-[#505D7B]'}`}>
                 {day.toLocaleDateString('en-GB', { weekday: 'short' })}
-                <div className={`text-lg leading-tight ${isToday ? 'text-[#FF6B00]' : 'text-[#1A2440]'}`}>{day.getDate()}</div>
+                <div className={`text-lg leading-tight ${isToday ? 'text-[#FF7D44]' : 'text-[#01323F]'}`}>{day.getDate()}</div>
               </div>
               <div className="space-y-1.5">
                 {daySlots.map(slot => (
                   <div key={slot.id} className={`rounded-md p-1.5 text-xs cursor-pointer hover:opacity-80 ${STATUS_COLORS[slot.status] ?? 'bg-gray-50 border-l-4 border-gray-300'}`}>
-                    <div className="font-mono font-bold text-[#1A2440]">{slot.slotTime}</div>
-                    <div className="font-medium text-[#1A2440] truncate">{slot.customerName}</div>
-                    <div className="text-[#6B7A94] truncate text-[10px]">{slot.shipmentDescription}</div>
+                    <div className="font-mono font-bold text-[#01323F]">{slot.slotTime}</div>
+                    <div className="font-medium text-[#01323F] truncate">{slot.customerName}</div>
+                    <div className="text-[#505D7B] truncate text-[10px]">{slot.shipmentDescription}</div>
                     <div className="flex items-center gap-1 mt-1">
                       {slot.jobType === 'INBOUND'
-                        ? <Package size={10} className="text-[#00ACC1]" />
-                        : <Truck    size={10} className="text-[#1565C0]" />}
-                      <span className="text-[10px] text-[#6B7A94]">{slot.warehouseName}</span>
+                        ? <Package size={10} className="text-[#45C9C3]" />
+                        : <Truck    size={10} className="text-[#07847F]" />}
+                      <span className="text-[10px] text-[#505D7B]">{slot.warehouseName}</span>
                     </div>
                   </div>
                 ))}
                 {daySlots.length === 0 && (
-                  <div className="text-[10px] text-[#6B7A94] text-center py-6 opacity-40">—</div>
+                  <div className="text-[10px] text-[#505D7B] text-center py-6 opacity-40">—</div>
                 )}
               </div>
             </div>
@@ -190,14 +188,14 @@ export default function PlanningCalendar() {
       </div>
 
       {/* Week list table */}
-      <div className="bg-white rounded-xl border border-[#E8ECF2] overflow-hidden">
-        <div className="px-5 py-4 border-b border-[#E8ECF2]">
-          <h3 className="font-semibold text-[#1A2440]">This Week — All Slots</h3>
+      <div className="bg-white rounded-xl border border-[#DDE8EC] overflow-hidden">
+        <div className="px-5 py-4 border-b border-[#DDE8EC]">
+          <h3 className="font-semibold text-[#01323F]">This Week — All Slots</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-[#F4F6FA] text-xs font-semibold text-[#6B7A94] uppercase tracking-wide">
+              <tr className="bg-[#F2F8FA] text-xs font-semibold text-[#505D7B] uppercase tracking-wide">
                 <th className="px-5 py-3 text-left">Date / Time</th>
                 <th className="px-5 py-3 text-left">Customer</th>
                 <th className="px-5 py-3 text-left">Type</th>
@@ -207,25 +205,25 @@ export default function PlanningCalendar() {
                 <th className="px-5 py-3 text-left">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E8ECF2]">
+            <tbody className="divide-y divide-[#DDE8EC]">
               {slots
                 .filter(s => s.slotDate >= fmtDate(days[0]) && s.slotDate <= fmtDate(days[6]))
                 .sort((a, b) => `${a.slotDate}${a.slotTime}`.localeCompare(`${b.slotDate}${b.slotTime}`))
                 .map(slot => (
-                  <tr key={slot.id} className="hover:bg-[#F4F6FA]/50 transition-colors">
+                  <tr key={slot.id} className="hover:bg-[#F2F8FA]/50 transition-colors">
                     <td className="px-5 py-3">
-                      <div className="font-mono text-xs text-[#1A2440]">{slot.slotDate}</div>
-                      <div className="font-mono text-xs text-[#6B7A94] flex items-center gap-1">
+                      <div className="font-mono text-xs text-[#01323F]">{slot.slotDate}</div>
+                      <div className="font-mono text-xs text-[#505D7B] flex items-center gap-1">
                         <Clock size={10} />{slot.slotTime}
                       </div>
                     </td>
-                    <td className="px-5 py-3 font-medium text-[#1A2440]">{slot.customerName}</td>
+                    <td className="px-5 py-3 font-medium text-[#01323F]">{slot.customerName}</td>
                     <td className="px-5 py-3"><Badge variant={slot.jobType} /></td>
                     <td className="px-5 py-3"><WarehouseBadge name={slot.warehouseName} /></td>
-                    <td className="px-5 py-3 font-mono text-xs text-[#6B7A94]">
+                    <td className="px-5 py-3 font-mono text-xs text-[#505D7B]">
                       {slot.containerNumber || slot.asnNumber || '—'}
                     </td>
-                    <td className="px-5 py-3 text-[#6B7A94] text-sm">{slot.driverName || '—'}</td>
+                    <td className="px-5 py-3 text-[#505D7B] text-sm">{slot.driverName || '—'}</td>
                     <td className="px-5 py-3"><Badge variant={slot.status} /></td>
                   </tr>
                 ))}
@@ -239,44 +237,44 @@ export default function PlanningCalendar() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Warehouse *</label>
+              <label className="block text-xs font-semibold text-[#505D7B] mb-1">Warehouse *</label>
               <select value={form.warehouseId} onChange={e => setForm(f => ({ ...f, warehouseId: e.target.value }))}
-                className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]">
+                className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]">
                 {WAREHOUSES.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Job Type *</label>
+              <label className="block text-xs font-semibold text-[#505D7B] mb-1">Job Type *</label>
               <select value={form.jobType} onChange={e => setForm(f => ({ ...f, jobType: e.target.value }))}
-                className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]">
+                className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]">
                 <option value="INBOUND">INBOUND</option>
                 <option value="OUTBOUND">OUTBOUND</option>
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Date *</label>
+              <label className="block text-xs font-semibold text-[#505D7B] mb-1">Date *</label>
               <input type="date" value={form.slotDate} onChange={e => setForm(f => ({ ...f, slotDate: e.target.value }))}
-                className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]" required />
+                className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]" required />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Time *</label>
+              <label className="block text-xs font-semibold text-[#505D7B] mb-1">Time *</label>
               <input type="time" value={form.slotTime} onChange={e => setForm(f => ({ ...f, slotTime: e.target.value }))}
-                className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]" required />
+                className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]" required />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Customer Name *</label>
+              <label className="block text-xs font-semibold text-[#505D7B] mb-1">Customer Name *</label>
               <input value={form.customerName} onChange={e => setForm(f => ({ ...f, customerName: e.target.value }))}
-                className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]"
+                className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]"
                 placeholder="e.g. Al Futtaim" required />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Driver Name</label>
+              <label className="block text-xs font-semibold text-[#505D7B] mb-1">Driver Name</label>
               <input value={form.driverName} onChange={e => setForm(f => ({ ...f, driverName: e.target.value }))}
-                className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]"
+                className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]"
                 placeholder="Optional" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#6B7A94] mb-1">
+              <label className="block text-xs font-semibold text-[#505D7B] mb-1">
                 {form.jobType === 'INBOUND' ? 'Container Number' : 'Order Number'}
               </label>
               <input
@@ -284,31 +282,31 @@ export default function PlanningCalendar() {
                 onChange={e => setForm(f => form.jobType === 'INBOUND'
                   ? { ...f, containerNumber: e.target.value }
                   : { ...f, orderNumber: e.target.value })}
-                className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm font-mono focus:outline-none focus:border-[#1565C0]"
+                className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm font-mono focus:outline-none focus:border-[#07847F]"
                 placeholder="Optional" />
             </div>
             {form.jobType === 'INBOUND' && (
               <div>
-                <label className="block text-xs font-semibold text-[#6B7A94] mb-1">ASN Number</label>
+                <label className="block text-xs font-semibold text-[#505D7B] mb-1">ASN Number</label>
                 <input value={form.asnNumber} onChange={e => setForm(f => ({ ...f, asnNumber: e.target.value }))}
-                  className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm font-mono focus:outline-none focus:border-[#1565C0]"
+                  className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm font-mono focus:outline-none focus:border-[#07847F]"
                   placeholder="Optional" />
               </div>
             )}
           </div>
           <div>
-            <label className="block text-xs font-semibold text-[#6B7A94] mb-1">Shipment Description</label>
+            <label className="block text-xs font-semibold text-[#505D7B] mb-1">Shipment Description</label>
             <input value={form.shipmentDescription} onChange={e => setForm(f => ({ ...f, shipmentDescription: e.target.value }))}
-              className="w-full px-3 py-2 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]"
+              className="w-full px-3 py-2 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]"
               placeholder="e.g. 40HC Container — General Cargo" />
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={() => setShowModal(false)}
-              className="px-4 py-2 text-sm font-medium text-[#6B7A94] border border-[#E8ECF2] rounded-lg hover:bg-gray-50">
+              className="px-4 py-2 text-sm font-medium text-[#505D7B] border border-[#DDE8EC] rounded-lg hover:bg-gray-50">
               Cancel
             </button>
             <button type="submit"
-              className="px-5 py-2 text-sm font-semibold text-white bg-[#FF6B00] rounded-lg hover:bg-orange-600 transition-colors">
+              className="px-5 py-2 text-sm font-semibold text-white bg-[#FF7D44] rounded-lg hover:bg-orange-600 transition-colors">
               Create Slot
             </button>
           </div>

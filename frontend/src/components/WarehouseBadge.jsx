@@ -1,5 +1,5 @@
 const WH_COLORS = {
-  'DXB-WH1': { bg: '#E3F0FF', color: '#1565C0' },
+  'DXB-WH1': { bg: '#E3F0FF', color: '#07847F' },
   'DXB-WH2': { bg: '#EDE7F6', color: '#4527A0' },
   'DXB-WH3': { bg: '#E0F7FA', color: '#00695C' },
   'SHJ-WH1': { bg: '#FFF3E0', color: '#E65100' },
@@ -7,7 +7,7 @@ const WH_COLORS = {
 }
 
 export default function WarehouseBadge({ name }) {
-  const c = WH_COLORS[name] || { bg: '#F4F6FA', color: '#6B7A94' }
+  const c = WH_COLORS[name] || { bg: '#F2F8FA', color: '#505D7B' }
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center',

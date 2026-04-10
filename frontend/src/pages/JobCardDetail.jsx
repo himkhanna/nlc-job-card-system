@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, RefreshCw, RotateCcw, Clock, CheckCircle, AlertTriangle, Info, Zap } from 'lucide-react'
+import { ArrowLeft, RefreshCw, RotateCcw, Clock, CheckCircle, AlertTriangle, Info, Zap, Camera } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Badge from '../components/Badge'
 import ProgressBar from '../components/ProgressBar'
 import WarehouseBadge from '../components/WarehouseBadge'
 import PhaseTracker from '../components/PhaseTracker'
 import Modal from '../components/Modal'
+import FaceScanModal from '../components/FaceScanModal'
 
 // ── Demo data keyed by job ID ─────────────────────────────────────────────────
 const DEMO_JOBS = {
@@ -77,8 +78,8 @@ function OverviewTab({ job }) {
       {/* Left: job info + phase tracker */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {/* Job details card */}
-        <div style={{ background: '#fff', border: '1px solid #E8ECF2', borderRadius: 12, padding: 20 }}>
-          <h3 style={{ margin: '0 0 14px', fontSize: 14, fontWeight: 700, color: '#1A2440' }}>Job Details</h3>
+        <div style={{ background: '#fff', border: '1px solid #DDE8EC', borderRadius: 12, padding: 20 }}>
+          <h3 style={{ margin: '0 0 14px', fontSize: 14, fontWeight: 700, color: '#01323F' }}>Job Details</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 24px' }}>
             {[
               ['Customer',  job.customer],
@@ -89,13 +90,13 @@ function OverviewTab({ job }) {
               ['Created',   job.createdAt],
             ].map(([label, val]) => (
               <div key={label}>
-                <p style={{ margin: 0, fontSize: 11, color: '#6B7A94', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px' }}>{label}</p>
-                <p style={{ margin: '2px 0 0', fontSize: 13, color: '#1A2440', fontFamily: ['Container','ASN / Order'].includes(label) ? 'DM Mono, monospace' : 'DM Sans, sans-serif' }}>{val}</p>
+                <p style={{ margin: 0, fontSize: 11, color: '#505D7B', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px' }}>{label}</p>
+                <p style={{ margin: '2px 0 0', fontSize: 13, color: '#01323F', fontFamily: ['Container','ASN / Order'].includes(label) ? 'DM Mono, monospace' : 'Roboto, sans-serif' }}>{val}</p>
               </div>
             ))}
           </div>
           {job.notes && (
-            <div style={{ marginTop: 14, padding: '10px 12px', background: '#F4F6FA', borderRadius: 8, fontSize: 13, color: '#6B7A94' }}>
+            <div style={{ marginTop: 14, padding: '10px 12px', background: '#F2F8FA', borderRadius: 8, fontSize: 13, color: '#505D7B' }}>
               <strong>Notes:</strong> {job.notes}
             </div>
           )}
@@ -116,31 +117,31 @@ function OverviewTab({ job }) {
         )}
 
         {/* Progress */}
-        <div style={{ background: '#fff', border: '1px solid #E8ECF2', borderRadius: 12, padding: 20 }}>
+        <div style={{ background: '#fff', border: '1px solid #DDE8EC', borderRadius: 12, padding: 20 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, color: '#1A2440' }}>Overall Progress</span>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#1565C0', fontFamily: 'DM Mono, monospace' }}>{job.progress}%</span>
+            <span style={{ fontSize: 13, fontWeight: 600, color: '#01323F' }}>Overall Progress</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#07847F', fontFamily: 'DM Mono, monospace' }}>{job.progress}%</span>
           </div>
           <ProgressBar percent={job.progress} height={8} />
         </div>
 
         {/* Phase actions */}
-        <div style={{ background: '#fff', border: '1px solid #E8ECF2', borderRadius: 12, padding: 20 }}>
-          <h3 style={{ margin: '0 0 14px', fontSize: 14, fontWeight: 700, color: '#1A2440' }}>Phase Actions</h3>
+        <div style={{ background: '#fff', border: '1px solid #DDE8EC', borderRadius: 12, padding: 20 }}>
+          <h3 style={{ margin: '0 0 14px', fontSize: 14, fontWeight: 700, color: '#01323F' }}>Phase Actions</h3>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             <button onClick={() => handleCompletePhase(job.currentPhase)}
-              style={{ height: 36, padding: '0 16px', background: '#2E7D32', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+              style={{ height: 36, padding: '0 16px', background: '#2E7D32', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'Roboto, sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
               <CheckCircle size={15} /> Complete "{job.currentPhase}"
             </button>
             {job.phases?.includes('VAS') && job.currentPhase === 'VAS' && (
               <button onClick={handleSkipVAS}
-                style={{ height: 36, padding: '0 16px', background: '#fff', border: '1px solid #E8ECF2', borderRadius: 8, color: '#6B7A94', fontSize: 13, fontFamily: 'DM Sans, sans-serif', cursor: 'pointer' }}>
+                style={{ height: 36, padding: '0 16px', background: '#fff', border: '1px solid #DDE8EC', borderRadius: 8, color: '#505D7B', fontSize: 13, fontFamily: 'Roboto, sans-serif', cursor: 'pointer' }}>
                 Skip VAS
               </button>
             )}
             {job.status === 'COMPLETED' && (
               <button onClick={() => setShowReactivate(true)}
-                style={{ height: 36, padding: '0 16px', background: '#FFF8E1', border: '1px solid #FFE082', borderRadius: 8, color: '#F57F17', fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+                style={{ height: 36, padding: '0 16px', background: '#FFF8E1', border: '1px solid #FFE082', borderRadius: 8, color: '#F57F17', fontSize: 13, fontWeight: 600, fontFamily: 'Roboto, sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <RotateCcw size={15} /> Reactivate Job
               </button>
             )}
@@ -149,21 +150,21 @@ function OverviewTab({ job }) {
       </div>
 
       {/* Right: phase tracker */}
-      <div style={{ background: '#fff', border: '1px solid #E8ECF2', borderRadius: 12, padding: 20 }}>
-        <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: '#1A2440' }}>Phase Tracker</h3>
+      <div style={{ background: '#fff', border: '1px solid #DDE8EC', borderRadius: 12, padding: 20 }}>
+        <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: '#01323F' }}>Phase Tracker</h3>
         <PhaseTracker phases={job.phases} currentPhase={job.currentPhase} phaseLogs={job.phaseLogs} />
       </div>
 
       {/* Reactivate modal */}
       <Modal open={showReactivate} onClose={() => setShowReactivate(false)} title="Reactivate Job Card"
         footer={<>
-          <button onClick={() => setShowReactivate(false)} style={{ height: 36, padding: '0 16px', border: '1px solid #E8ECF2', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 13, fontFamily: 'DM Sans, sans-serif', color: '#6B7A94' }}>Cancel</button>
-          <button onClick={() => { toast.success('Job reactivated.'); setShowReactivate(false) }} style={{ height: 36, padding: '0 16px', background: '#F57F17', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', cursor: 'pointer' }}>Reactivate</button>
+          <button onClick={() => setShowReactivate(false)} style={{ height: 36, padding: '0 16px', border: '1px solid #DDE8EC', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 13, fontFamily: 'Roboto, sans-serif', color: '#505D7B' }}>Cancel</button>
+          <button onClick={() => { toast.success('Job reactivated.'); setShowReactivate(false) }} style={{ height: 36, padding: '0 16px', background: '#F57F17', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'Roboto, sans-serif', cursor: 'pointer' }}>Reactivate</button>
         </>}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <p style={{ margin: 0, fontSize: 13, color: '#6B7A94' }}>Provide a reason for reactivating this completed job.</p>
+          <p style={{ margin: 0, fontSize: 13, color: '#505D7B' }}>Provide a reason for reactivating this completed job.</p>
           <textarea value={reason} onChange={e => setReason(e.target.value)} placeholder="e.g. Customer reported missing items after GRN"
-            style={{ width: '100%', minHeight: 80, border: '1px solid #E8ECF2', borderRadius: 8, padding: 10, fontSize: 13, fontFamily: 'DM Sans, sans-serif', resize: 'vertical', boxSizing: 'border-box', outline: 'none' }} />
+            style={{ width: '100%', minHeight: 80, border: '1px solid #DDE8EC', borderRadius: 8, padding: 10, fontSize: 13, fontFamily: 'Roboto, sans-serif', resize: 'vertical', boxSizing: 'border-box', outline: 'none' }} />
         </div>
       </Modal>
     </div>
@@ -171,7 +172,8 @@ function OverviewTab({ job }) {
 }
 
 function WorkforceTab({ job }) {
-  const [showClockIn, setShowClockIn] = useState(false)
+  const [showClockIn, setShowClockIn]     = useState(false)
+  const [showFaceScan, setShowFaceScan]   = useState(false)
 
   const clocked = job.workers.filter(w => !w.clockOut)
   const finished = job.workers.filter(w => w.clockOut)
@@ -180,35 +182,55 @@ function WorkforceTab({ job }) {
     toast.success(`${worker.name} clocked out.`)
   }
 
+  function handleFaceClockResult(result) {
+    // result.status = CLOCKED_IN | CLOCKED_OUT — toast already shown in modal
+    // In a live implementation you'd refetch clock events here
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <p style={{ margin: 0, fontSize: 13, color: '#6B7A94' }}>{clocked.length} worker{clocked.length !== 1 ? 's' : ''} currently clocked in</p>
-        <button onClick={() => setShowClockIn(true)}
-          style={{ height: 36, padding: '0 16px', background: '#FF6B00', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <Clock size={15} /> Clock In Worker
-        </button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        <p style={{ margin: 0, fontSize: 13, color: '#505D7B' }}>{clocked.length} worker{clocked.length !== 1 ? 's' : ''} currently clocked in</p>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={() => setShowFaceScan(true)}
+            style={{ height: 36, padding: '0 14px', background: '#07847F', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'Roboto, sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Camera size={15} /> Scan Face
+          </button>
+          <button onClick={() => setShowClockIn(true)}
+            style={{ height: 36, padding: '0 14px', background: '#FF7D44', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'Roboto, sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Clock size={15} /> Manual
+          </button>
+        </div>
       </div>
+
+      {/* Face Scan Modal */}
+      <FaceScanModal
+        open={showFaceScan}
+        onClose={() => setShowFaceScan(false)}
+        jobId={job.id}
+        phaseName={job.currentPhase ?? job.phases?.[0] ?? 'General'}
+        onSuccess={handleFaceClockResult}
+      />
 
       {/* Clocked in */}
       {clocked.length > 0 && (
-        <div style={{ background: '#fff', border: '1px solid #E8ECF2', borderRadius: 12, overflow: 'hidden' }}>
-          <div style={{ padding: '12px 16px', borderBottom: '1px solid #E8ECF2', background: '#F0FFF4' }}>
+        <div style={{ background: '#fff', border: '1px solid #DDE8EC', borderRadius: 12, overflow: 'hidden' }}>
+          <div style={{ padding: '12px 16px', borderBottom: '1px solid #DDE8EC', background: '#F0FFF4' }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: '#2E7D32' }}>CURRENTLY CLOCKED IN</span>
           </div>
           {clocked.map(w => (
-            <div key={w.id} style={{ display: 'flex', alignItems: 'center', padding: '12px 16px', borderBottom: '1px solid #F4F6FA', gap: 12 }}>
+            <div key={w.id} style={{ display: 'flex', alignItems: 'center', padding: '12px 16px', borderBottom: '1px solid #F2F8FA', gap: 12 }}>
               <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#E8F5E9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#2E7D32', flexShrink: 0 }}>
                 {w.name.charAt(0)}
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#1A2440' }}>{w.name}</p>
-                <p style={{ margin: '2px 0 0', fontSize: 12, color: '#6B7A94' }}>
+                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#01323F' }}>{w.name}</p>
+                <p style={{ margin: '2px 0 0', fontSize: 12, color: '#505D7B' }}>
                   Phase: <strong>{w.phase}</strong> · In since {new Date(w.clockIn).toLocaleTimeString()}
                 </p>
               </div>
               <button onClick={() => handleClockOut(w)}
-                style={{ height: 32, padding: '0 14px', background: '#FFEBEE', border: '1px solid #FFCDD2', borderRadius: 7, color: '#C62828', fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', cursor: 'pointer' }}>
+                style={{ height: 32, padding: '0 14px', background: '#FFEBEE', border: '1px solid #FFCDD2', borderRadius: 7, color: '#C62828', fontSize: 12, fontWeight: 600, fontFamily: 'Roboto, sans-serif', cursor: 'pointer' }}>
                 Clock Out
               </button>
             </div>
@@ -218,22 +240,22 @@ function WorkforceTab({ job }) {
 
       {/* History */}
       {finished.length > 0 && (
-        <div style={{ background: '#fff', border: '1px solid #E8ECF2', borderRadius: 12, overflow: 'hidden' }}>
-          <div style={{ padding: '12px 16px', borderBottom: '1px solid #E8ECF2' }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: '#6B7A94' }}>CLOCK HISTORY</span>
+        <div style={{ background: '#fff', border: '1px solid #DDE8EC', borderRadius: 12, overflow: 'hidden' }}>
+          <div style={{ padding: '12px 16px', borderBottom: '1px solid #DDE8EC' }}>
+            <span style={{ fontSize: 12, fontWeight: 700, color: '#505D7B' }}>CLOCK HISTORY</span>
           </div>
           {finished.map(w => (
-            <div key={w.id} style={{ display: 'flex', alignItems: 'center', padding: '11px 16px', borderBottom: '1px solid #F4F6FA', gap: 12 }}>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#F4F6FA', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#6B7A94', flexShrink: 0 }}>
+            <div key={w.id} style={{ display: 'flex', alignItems: 'center', padding: '11px 16px', borderBottom: '1px solid #F2F8FA', gap: 12 }}>
+              <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#F2F8FA', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#505D7B', flexShrink: 0 }}>
                 {w.name.charAt(0)}
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#1A2440' }}>{w.name}</p>
-                <p style={{ margin: '2px 0 0', fontSize: 12, color: '#6B7A94' }}>
+                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#01323F' }}>{w.name}</p>
+                <p style={{ margin: '2px 0 0', fontSize: 12, color: '#505D7B' }}>
                   {w.phase} · {new Date(w.clockIn).toLocaleTimeString()} → {new Date(w.clockOut).toLocaleTimeString()}
                 </p>
               </div>
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#1A2440', fontFamily: 'DM Mono, monospace' }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#01323F', fontFamily: 'DM Mono, monospace' }}>
                 {w.duration} min
               </span>
             </div>
@@ -242,26 +264,26 @@ function WorkforceTab({ job }) {
       )}
 
       {job.workers.length === 0 && (
-        <div style={{ textAlign: 'center', padding: 40, color: '#6B7A94', fontSize: 13 }}>No clock events yet for this job.</div>
+        <div style={{ textAlign: 'center', padding: 40, color: '#505D7B', fontSize: 13 }}>No clock events yet for this job.</div>
       )}
 
       <Modal open={showClockIn} onClose={() => setShowClockIn(false)} title="Clock In Worker"
         footer={<>
-          <button onClick={() => setShowClockIn(false)} style={{ height: 36, padding: '0 16px', border: '1px solid #E8ECF2', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 13, fontFamily: 'DM Sans, sans-serif', color: '#6B7A94' }}>Cancel</button>
-          <button onClick={() => { toast.success('Worker clocked in.'); setShowClockIn(false) }} style={{ height: 36, padding: '0 16px', background: '#FF6B00', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', cursor: 'pointer' }}>Clock In</button>
+          <button onClick={() => setShowClockIn(false)} style={{ height: 36, padding: '0 16px', border: '1px solid #DDE8EC', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 13, fontFamily: 'Roboto, sans-serif', color: '#505D7B' }}>Cancel</button>
+          <button onClick={() => { toast.success('Worker clocked in.'); setShowClockIn(false) }} style={{ height: 36, padding: '0 16px', background: '#FF7D44', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'Roboto, sans-serif', cursor: 'pointer' }}>Clock In</button>
         </>}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#1A2440', marginBottom: 5 }}>Select Worker</label>
-            <select style={{ width: '100%', height: 38, border: '1px solid #E8ECF2', borderRadius: 8, padding: '0 10px', fontSize: 13, fontFamily: 'DM Sans, sans-serif', outline: 'none', background: '#fff' }}>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#01323F', marginBottom: 5 }}>Select Worker</label>
+            <select style={{ width: '100%', height: 38, border: '1px solid #DDE8EC', borderRadius: 8, padding: '0 10px', fontSize: 13, fontFamily: 'Roboto, sans-serif', outline: 'none', background: '#fff' }}>
               <option>Rajan Pillai (EMP-001)</option>
               <option>Ramesh Kumar (EMP-003) — Tally specialist</option>
               <option>Priya Menon (EMP-006) — Tally specialist</option>
             </select>
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#1A2440', marginBottom: 5 }}>Phase</label>
-            <select style={{ width: '100%', height: 38, border: '1px solid #E8ECF2', borderRadius: 8, padding: '0 10px', fontSize: 13, fontFamily: 'DM Sans, sans-serif', outline: 'none', background: '#fff' }}>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#01323F', marginBottom: 5 }}>Phase</label>
+            <select style={{ width: '100%', height: 38, border: '1px solid #DDE8EC', borderRadius: 8, padding: '0 10px', fontSize: 13, fontFamily: 'Roboto, sans-serif', outline: 'none', background: '#fff' }}>
               {job.phases?.map(p => <option key={p}>{p}</option>)}
             </select>
           </div>
@@ -281,31 +303,31 @@ function SkuTallyTab({ job }) {
     setSimulating(false)
   }
 
-  const tallyStatusColor = { COMPLETE: '#2E7D32', PARTIAL: '#F57F17', PENDING: '#6B7A94' }
+  const tallyStatusColor = { COMPLETE: '#2E7D32', PARTIAL: '#F57F17', PENDING: '#505D7B' }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Read-only banner */}
       <div style={{ background: '#E3F0FF', border: '1px solid #BBDEFB', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <Info size={16} color="#1565C0" style={{ flexShrink: 0 }} />
-        <span style={{ fontSize: 13, color: '#1565C0' }}>Data pulled from ERP/PDA system — read only. Scanned quantities come from Honeywell/Newland PDA devices.</span>
+        <Info size={16} color="#07847F" style={{ flexShrink: 0 }} />
+        <span style={{ fontSize: 13, color: '#07847F' }}>Data pulled from ERP/PDA system — read only. Scanned quantities come from Honeywell/Newland PDA devices.</span>
       </div>
 
       {/* Demo: Simulate ERP signal */}
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <button onClick={simulateErpSignal} disabled={simulating}
-          style={{ height: 36, padding: '0 16px', background: simulating ? '#E3F0FF' : '#1565C0', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', cursor: simulating ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+          style={{ height: 36, padding: '0 16px', background: simulating ? '#E3F0FF' : '#07847F', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'Roboto, sans-serif', cursor: simulating ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
           {simulating ? <><span style={{ width: 14, height: 14, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite', display: 'inline-block' }} /> Simulating...</> : <><Zap size={14} /> Simulate ERP VR-GRN Signal</>}
         </button>
       </div>
 
       {/* SKU table */}
-      <div style={{ background: '#fff', border: '1px solid #E8ECF2', borderRadius: 12, overflow: 'hidden' }}>
+      <div style={{ background: '#fff', border: '1px solid #DDE8EC', borderRadius: 12, overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ background: '#F8F9FC' }}>
               {['SKU Code', 'Description', 'Expected', 'Scanned', 'Variance', 'Time (min)', 'Status'].map(h => (
-                <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#6B7A94', textTransform: 'uppercase', letterSpacing: '0.4px', borderBottom: '1px solid #E8ECF2' }}>{h}</th>
+                <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#505D7B', textTransform: 'uppercase', letterSpacing: '0.4px', borderBottom: '1px solid #DDE8EC' }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -313,9 +335,9 @@ function SkuTallyTab({ job }) {
             {job.skuTallies.map((sku, i) => {
               const variance = sku.expected - sku.scanned
               return (
-                <tr key={sku.sku} style={{ borderTop: i > 0 ? '1px solid #F4F6FA' : 'none' }}>
-                  <td style={{ padding: '11px 14px', fontSize: 13, fontFamily: 'DM Mono, monospace', color: '#1565C0', fontWeight: 600 }}>{sku.sku}</td>
-                  <td style={{ padding: '11px 14px', fontSize: 13, color: '#1A2440' }}>{sku.desc}</td>
+                <tr key={sku.sku} style={{ borderTop: i > 0 ? '1px solid #F2F8FA' : 'none' }}>
+                  <td style={{ padding: '11px 14px', fontSize: 13, fontFamily: 'DM Mono, monospace', color: '#07847F', fontWeight: 600 }}>{sku.sku}</td>
+                  <td style={{ padding: '11px 14px', fontSize: 13, color: '#01323F' }}>{sku.desc}</td>
                   <td style={{ padding: '11px 14px', fontSize: 13, fontFamily: 'DM Mono, monospace', textAlign: 'right' }}>{sku.expected}</td>
                   <td style={{ padding: '11px 14px', fontSize: 13, fontFamily: 'DM Mono, monospace', textAlign: 'right', fontWeight: 600 }}>{sku.scanned}</td>
                   <td style={{ padding: '11px 14px', fontSize: 13, fontFamily: 'DM Mono, monospace', textAlign: 'right', color: variance !== 0 ? '#C62828' : '#2E7D32', fontWeight: 600 }}>
@@ -323,7 +345,7 @@ function SkuTallyTab({ job }) {
                   </td>
                   <td style={{ padding: '11px 14px', fontSize: 13, fontFamily: 'DM Mono, monospace', textAlign: 'right' }}>{sku.time || '—'}</td>
                   <td style={{ padding: '11px 14px' }}>
-                    <span style={{ fontSize: 11, fontWeight: 700, color: tallyStatusColor[sku.status] || '#6B7A94', background: sku.status === 'COMPLETE' ? '#E8F5E9' : sku.status === 'PARTIAL' ? '#FFF8E1' : '#F4F6FA', padding: '2px 8px', borderRadius: 20 }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: tallyStatusColor[sku.status] || '#505D7B', background: sku.status === 'COMPLETE' ? '#E8F5E9' : sku.status === 'PARTIAL' ? '#FFF8E1' : '#F2F8FA', padding: '2px 8px', borderRadius: 20 }}>
                       {sku.status}
                     </span>
                   </td>
@@ -340,12 +362,12 @@ function SkuTallyTab({ job }) {
 
 function DispatchNotesTab({ job }) {
   if (job.type !== 'OUTBOUND') {
-    return <div style={{ textAlign: 'center', padding: 40, color: '#6B7A94', fontSize: 13 }}>Dispatch notes are only applicable to OUTBOUND jobs.</div>
+    return <div style={{ textAlign: 'center', padding: 40, color: '#505D7B', fontSize: 13 }}>Dispatch notes are only applicable to OUTBOUND jobs.</div>
   }
   if (job.dispatchNotes.length === 0) {
-    return <div style={{ textAlign: 'center', padding: 40, color: '#6B7A94', fontSize: 13 }}>No dispatch notes for this job.</div>
+    return <div style={{ textAlign: 'center', padding: 40, color: '#505D7B', fontSize: 13 }}>No dispatch notes for this job.</div>
   }
-  return <div style={{ color: '#6B7A94', fontSize: 13 }}>Dispatch notes — coming soon</div>
+  return <div style={{ color: '#505D7B', fontSize: 13 }}>Dispatch notes — coming soon</div>
 }
 
 function ErpSyncTab({ job }) {
@@ -363,17 +385,17 @@ function ErpSyncTab({ job }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div style={{ display: 'flex', gap: 10 }}>
         <button onClick={() => simulate('push', setPushing)} disabled={pushing}
-          style={{ height: 36, padding: '0 16px', background: pushing ? '#E8F5E9' : '#2E7D32', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', cursor: pushing ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+          style={{ height: 36, padding: '0 16px', background: pushing ? '#E8F5E9' : '#2E7D32', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'Roboto, sans-serif', cursor: pushing ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
           {pushing ? 'Pushing...' : '↑ Push to ERP'}
         </button>
         <button onClick={() => simulate('pull', setPulling)} disabled={pulling}
-          style={{ height: 36, padding: '0 16px', background: '#fff', border: '1px solid #E8ECF2', borderRadius: 8, color: '#1A2440', fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', cursor: pulling ? 'not-allowed' : 'pointer' }}>
+          style={{ height: 36, padding: '0 16px', background: '#fff', border: '1px solid #DDE8EC', borderRadius: 8, color: '#01323F', fontSize: 13, fontWeight: 600, fontFamily: 'Roboto, sans-serif', cursor: pulling ? 'not-allowed' : 'pointer' }}>
           {pulling ? 'Pulling...' : '↓ Pull from ERP'}
         </button>
       </div>
-      <div style={{ background: '#fff', border: '1px solid #E8ECF2', borderRadius: 12, padding: 20 }}>
-        <p style={{ margin: 0, fontSize: 13, color: '#6B7A94' }}>ERP sync log will appear here once backend is connected.</p>
-        <div style={{ marginTop: 12, padding: '10px 12px', background: '#F4F6FA', borderRadius: 8, fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#6B7A94' }}>
+      <div style={{ background: '#fff', border: '1px solid #DDE8EC', borderRadius: 12, padding: 20 }}>
+        <p style={{ margin: 0, fontSize: 13, color: '#505D7B' }}>ERP sync log will appear here once backend is connected.</p>
+        <div style={{ marginTop: 12, padding: '10px 12px', background: '#F2F8FA', borderRadius: 8, fontFamily: 'DM Mono, monospace', fontSize: 12, color: '#505D7B' }}>
           GRN Generated: {job.grnGenerated ? '✓ Yes' : 'No'} &nbsp;|&nbsp; ERP Synced: {job.erpSynced ? '✓ Yes' : 'No'}
         </div>
       </div>
@@ -390,28 +412,28 @@ export default function JobCardDetail() {
   const job = DEMO_JOBS[id] || DEMO_JOBS['jc841']
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, fontFamily: 'DM Sans, sans-serif' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, fontFamily: 'Roboto, sans-serif' }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
         <button onClick={() => navigate('/jobs')}
-          style={{ width: 34, height: 34, border: '1px solid #E8ECF2', borderRadius: 8, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <ArrowLeft size={16} color="#6B7A94" />
+          style={{ width: 34, height: 34, border: '1px solid #DDE8EC', borderRadius: 8, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <ArrowLeft size={16} color="#505D7B" />
         </button>
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: '#1A2440', fontFamily: 'DM Mono, monospace' }}>{job.jobNumber}</h2>
+            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: '#01323F', fontFamily: 'DM Mono, monospace' }}>{job.jobNumber}</h2>
             <Badge variant={job.status} label={STATUS_LABELS[job.status]} />
             <Badge variant={job.priority} label={job.priority} size="sm" />
             <Badge variant={job.type} label={job.type} size="sm" />
             <WarehouseBadge name={job.warehouse} />
           </div>
-          <p style={{ margin: '4px 0 0', fontSize: 13, color: '#6B7A94' }}>
-            {job.customer} · Current phase: <strong style={{ color: '#1A2440' }}>{job.currentPhase}</strong>
+          <p style={{ margin: '4px 0 0', fontSize: 13, color: '#505D7B' }}>
+            {job.customer} · Current phase: <strong style={{ color: '#01323F' }}>{job.currentPhase}</strong>
           </p>
         </div>
-        <button style={{ height: 34, width: 34, border: '1px solid #E8ECF2', borderRadius: 8, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <RefreshCw size={15} color="#6B7A94" />
+        <button style={{ height: 34, width: 34, border: '1px solid #DDE8EC', borderRadius: 8, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <RefreshCw size={15} color="#505D7B" />
         </button>
       </div>
 
@@ -419,14 +441,14 @@ export default function JobCardDetail() {
       <ProgressBar percent={job.progress} height={6} showLabel />
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid #E8ECF2', paddingBottom: 0 }}>
+      <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid #DDE8EC', paddingBottom: 0 }}>
         {TABS.map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)}
             style={{
               padding: '9px 16px', border: 'none', background: 'transparent', cursor: 'pointer',
-              fontSize: 13, fontWeight: activeTab === tab ? 700 : 400, fontFamily: 'DM Sans, sans-serif',
-              color: activeTab === tab ? '#1565C0' : '#6B7A94',
-              borderBottom: activeTab === tab ? '2px solid #1565C0' : '2px solid transparent',
+              fontSize: 13, fontWeight: activeTab === tab ? 700 : 400, fontFamily: 'Roboto, sans-serif',
+              color: activeTab === tab ? '#07847F' : '#505D7B',
+              borderBottom: activeTab === tab ? '2px solid #07847F' : '2px solid transparent',
               marginBottom: -1, transition: 'all 0.15s',
             }}>
             {tab}

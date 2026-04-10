@@ -4,7 +4,8 @@
  * On 401, attempts token refresh once, then redirects to /login.
  */
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5144'
+// Empty string = same-origin (nginx proxy). Falls back to local dev backend.
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
 
 function getAuth() {
   try {
@@ -200,6 +201,67 @@ export const settings = {
   },
 }
 
+// ── Face Recognition ─────────────────────────────────────────────────────────
+
+export const face = {
+  /** GET /api/workers/{id}/face-status */
+  getStatus: (workerId) =>
+    request(`/api/workers/${workerId}/face-status`),
+
+  /** POST /api/workers/{id}/face — multipart photo upload */
+  enroll: (workerId, photoFile) => {
+    const auth = getAuth()
+    const formData = new FormData()
+    formData.append('photo', photoFile)
+    return fetch(`${BASE_URL}/api/workers/${workerId}/face`, {
+      method: 'POST',
+      headers: auth?.accessToken ? { Authorization: `Bearer ${auth.accessToken}` } : {},
+      body: formData,
+    }).then(async res => {
+      if (!res.ok) {
+        const text = await res.text()
+        let message = `HTTP ${res.status}`
+        try { message = JSON.parse(text)?.error ?? message } catch { message = text || message }
+        throw new Error(message)
+      }
+      return res.json()
+    })
+  },
+
+  /** DELETE /api/workers/{id}/face */
+  deleteEnrollment: (workerId) =>
+    request(`/api/workers/${workerId}/face`, { method: 'DELETE' }),
+
+  /** POST /api/workers/{id}/face-pin */
+  setPin: (workerId, pin) =>
+    request(`/api/workers/${workerId}/face-pin`, { method: 'POST', body: JSON.stringify({ pin }) }),
+
+  /** POST /api/jobs/{jobId}/face-clock — multipart image + phaseName */
+  clockByFace: (jobId, imageBlob, phaseName) => {
+    const auth = getAuth()
+    const formData = new FormData()
+    formData.append('image', imageBlob, 'face.jpg')
+    formData.append('phaseName', phaseName)
+    return fetch(`${BASE_URL}/api/jobs/${jobId}/face-clock`, {
+      method: 'POST',
+      headers: auth?.accessToken ? { Authorization: `Bearer ${auth.accessToken}` } : {},
+      body: formData,
+    }).then(async res => {
+      const text = await res.text()
+      const json = text ? JSON.parse(text) : null
+      if (!res.ok) throw new Error(json?.message ?? `HTTP ${res.status}`)
+      return json
+    })
+  },
+
+  /** POST /api/jobs/{jobId}/face-clock/pin */
+  clockByPin: (jobId, workerId, pin, phaseName) =>
+    request(`/api/jobs/${jobId}/face-clock/pin`, {
+      method: 'POST',
+      body: JSON.stringify({ workerId, pin, phaseName }),
+    }),
+}
+
 // ── ERP ───────────────────────────────────────────────────────────────────────
 
 export const erp = {
@@ -210,4 +272,4 @@ export const erp = {
   simulateTally:  (jobId) => request(`/api/webhooks/tally-complete/${jobId}`, { method: 'POST' }),
 }
 
-export default { auth, jobs, workers, planning, warehouses, reports, settings, erp }
+export default { auth, jobs, workers, planning, warehouses, reports, settings, erp, face }

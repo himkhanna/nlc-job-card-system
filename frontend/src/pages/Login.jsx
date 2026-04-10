@@ -1,13 +1,8 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Eye, EyeOff, LogIn, FlaskConical } from 'lucide-react'
+import { Eye, EyeOff, LogIn } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useAuth } from '../context/AuthContext'
-
-const DEMO_USERS = [
-  { email: 'admin@nlc.demo',      role: 'Admin',      warehouses: 'All warehouses' },
-  { email: 'supervisor@nlc.demo', role: 'Supervisor',  warehouses: 'DXB-WH1, DXB-WH2' },
-]
 
 export default function Login() {
   const navigate  = useNavigate()
@@ -36,20 +31,15 @@ export default function Login() {
     setLoading(false)
   }
 
-  function fillDemo(demoEmail) {
-    setEmail(demoEmail)
-    setPassword('NLC@demo2025')
-  }
-
   return (
     <div style={{
       minHeight: '100svh',
-      background: '#F4F6FA',
+      background: '#F2F8FA',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       padding: 24,
-      fontFamily: 'DM Sans, sans-serif',
+      fontFamily: 'Roboto, sans-serif',
     }}>
       <div style={{ width: '100%', maxWidth: 420 }}>
 
@@ -58,7 +48,7 @@ export default function Login() {
           <div style={{
             width: 56,
             height: 56,
-            background: '#0B1D3A',
+            background: '#1C3F39',
             borderRadius: 14,
             display: 'inline-flex',
             alignItems: 'center',
@@ -67,10 +57,10 @@ export default function Login() {
           }}>
             <span style={{ color: '#fff', fontWeight: 800, fontSize: 26 }}>N</span>
           </div>
-          <h1 style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 700, color: '#1A2440' }}>
+          <h1 style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 700, color: '#01323F' }}>
             NLC Job Card System
           </h1>
-          <p style={{ margin: 0, fontSize: 14, color: '#6B7A94' }}>
+          <p style={{ margin: 0, fontSize: 14, color: '#505D7B' }}>
             Neelkamal Group · Warehouse Operations
           </p>
         </div>
@@ -79,18 +69,18 @@ export default function Login() {
         <div style={{
           background: '#fff',
           borderRadius: 12,
-          border: '1px solid #E8ECF2',
+          border: '1px solid #DDE8EC',
           boxShadow: '0 2px 12px rgba(11,29,58,0.07)',
           padding: 32,
         }}>
-          <h2 style={{ margin: '0 0 24px', fontSize: 17, fontWeight: 600, color: '#1A2440' }}>
+          <h2 style={{ margin: '0 0 24px', fontSize: 17, fontWeight: 600, color: '#01323F' }}>
             Sign in to your account
           </h2>
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {/* Email */}
             <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#1A2440', marginBottom: 6 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#01323F', marginBottom: 6 }}>
                 Email address
               </label>
               <input
@@ -102,24 +92,24 @@ export default function Login() {
                 style={{
                   width: '100%',
                   height: 40,
-                  border: '1px solid #E8ECF2',
+                  border: '1px solid #DDE8EC',
                   borderRadius: 8,
                   padding: '0 12px',
                   fontSize: 14,
-                  color: '#1A2440',
-                  fontFamily: 'DM Sans, sans-serif',
+                  color: '#01323F',
+                  fontFamily: 'Roboto, sans-serif',
                   outline: 'none',
                   background: '#FAFBFD',
                   boxSizing: 'border-box',
                 }}
-                onFocus={e => e.target.style.borderColor = '#1565C0'}
-                onBlur={e => e.target.style.borderColor = '#E8ECF2'}
+                onFocus={e => e.target.style.borderColor = '#07847F'}
+                onBlur={e => e.target.style.borderColor = '#DDE8EC'}
               />
             </div>
 
             {/* Password */}
             <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#1A2440', marginBottom: 6 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#01323F', marginBottom: 6 }}>
                 Password
               </label>
               <div style={{ position: 'relative' }}>
@@ -132,18 +122,18 @@ export default function Login() {
                   style={{
                     width: '100%',
                     height: 40,
-                    border: '1px solid #E8ECF2',
+                    border: '1px solid #DDE8EC',
                     borderRadius: 8,
                     padding: '0 40px 0 12px',
                     fontSize: 14,
-                    color: '#1A2440',
-                    fontFamily: 'DM Sans, sans-serif',
+                    color: '#01323F',
+                    fontFamily: 'Roboto, sans-serif',
                     outline: 'none',
                     background: '#FAFBFD',
                     boxSizing: 'border-box',
                   }}
-                  onFocus={e => e.target.style.borderColor = '#1565C0'}
-                  onBlur={e => e.target.style.borderColor = '#E8ECF2'}
+                  onFocus={e => e.target.style.borderColor = '#07847F'}
+                  onBlur={e => e.target.style.borderColor = '#DDE8EC'}
                 />
                 <button
                   type="button"
@@ -154,7 +144,7 @@ export default function Login() {
                     display: 'flex', alignItems: 'center',
                   }}
                 >
-                  {showPw ? <EyeOff size={16} color="#6B7A94" /> : <Eye size={16} color="#6B7A94" />}
+                  {showPw ? <EyeOff size={16} color="#505D7B" /> : <Eye size={16} color="#505D7B" />}
                 </button>
               </div>
             </div>
@@ -165,13 +155,13 @@ export default function Login() {
               disabled={loading}
               style={{
                 height: 42,
-                background: loading ? '#FFB380' : '#FF6B00',
+                background: loading ? '#FFBA94' : '#FF7D44',
                 color: '#fff',
                 border: 'none',
                 borderRadius: 8,
                 fontSize: 14,
                 fontWeight: 600,
-                fontFamily: 'DM Sans, sans-serif',
+                fontFamily: 'Roboto, sans-serif',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -201,61 +191,8 @@ export default function Login() {
           </form>
         </div>
 
-        {/* Demo accounts */}
-        <div style={{
-          marginTop: 20,
-          background: '#FFF8E1',
-          border: '1px solid #FFE082',
-          borderRadius: 10,
-          padding: '14px 16px',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-            <FlaskConical size={14} color="#F57F17" />
-            <span style={{ fontSize: 12, fontWeight: 600, color: '#7B5800' }}>DEMO ACCOUNTS — click to fill</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {DEMO_USERS.map(u => (
-              <button
-                key={u.email}
-                onClick={() => fillDemo(u.email)}
-                style={{
-                  background: '#fff',
-                  border: '1px solid #FFE082',
-                  borderRadius: 7,
-                  padding: '8px 12px',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  width: '100%',
-                }}
-              >
-                <div>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: '#1A2440', fontFamily: 'DM Mono, monospace' }}>
-                    {u.email}
-                  </div>
-                  <div style={{ fontSize: 11, color: '#6B7A94', marginTop: 1 }}>
-                    {u.warehouses}
-                  </div>
-                </div>
-                <span style={{
-                  fontSize: 10, fontWeight: 700,
-                  color: u.role === 'Admin' ? '#1565C0' : '#2E7D32',
-                  background: u.role === 'Admin' ? '#E3F0FF' : '#E8F5E9',
-                  padding: '2px 8px', borderRadius: 20, flexShrink: 0, marginLeft: 8,
-                }}>
-                  {u.role.toUpperCase()}
-                </span>
-              </button>
-            ))}
-            <p style={{ margin: '6px 0 0', fontSize: 11, color: '#9E6B00', textAlign: 'center' }}>
-              Password for all: <code style={{ fontFamily: 'DM Mono, monospace' }}>NLC@demo2025</code>
-            </p>
-          </div>
-        </div>
 
-        <p style={{ textAlign: 'center', fontSize: 12, color: '#6B7A94', marginTop: 20 }}>
+        <p style={{ textAlign: 'center', fontSize: 12, color: '#505D7B', marginTop: 20 }}>
           Built by IDC Technologies for Neelkamal Group
         </p>
       </div>

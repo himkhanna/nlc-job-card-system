@@ -45,6 +45,9 @@ export default function App() {
                   {/* Role-guarded routes */}
                   <Route element={<ProtectedRoute roles={['admin', 'supervisor']} />}>
                     <Route path="/workforce" element={<Workforce />} />
+                  </Route>
+
+                  <Route element={<ProtectedRoute roles={['supervisor']} />}>
                     <Route path="/supervisor" element={<SupervisorFloor />} />
                   </Route>
 
@@ -62,7 +65,7 @@ export default function App() {
       <Toaster
         position="top-right"
         toastOptions={{
-          style: { fontFamily: 'DM Sans, sans-serif', fontSize: '14px' },
+          style: { fontFamily: 'Roboto, sans-serif', fontSize: '14px' },
         }}
       />
     </QueryClientProvider>

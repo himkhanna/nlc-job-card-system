@@ -1,23 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
-  /* NLC Brand Colors */
-  --color-navy: #0B1D3A;
-  --color-blue: #1565C0;
-  --color-orange: #FF6B00;
+  /* NLC Logistic Brand Colors */
+  --color-navy: #1C3F39;
+  --color-blue: #07847F;
+  --color-orange: #FF7D44;
   --color-success: #2E7D32;
   --color-warning: #F57F17;
   --color-danger: #C62828;
-  --color-teal: #00ACC1;
-  --color-background: #F4F6FA;
+  --color-teal: #45C9C3;
+  --color-background: #F2F8FA;
   --color-card: #FFFFFF;
-  --color-border: #E8ECF2;
-  --color-text-primary: #1A2440;
-  --color-text-muted: #6B7A94;
+  --color-border: #DDE8EC;
+  --color-text-primary: #01323F;
+  --color-text-muted: #505D7B;
 
   /* Typography */
-  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Outfit', 'Roboto', ui-sans-serif, sans-serif;
   --font-mono: 'DM Mono', ui-monospace, monospace;
 }
 
@@ -27,8 +28,8 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: #F4F6FA;
-  color: #1A2440;
+  background-color: #F2F8FA;
+  color: #01323F;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
@@ -42,6 +43,6 @@ body {
 
 /* Scrollbar styling */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #F4F6FA; }
-::-webkit-scrollbar-thumb { background: #E8ECF2; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #6B7A94; }
+::-webkit-scrollbar-track { background: #F2F8FA; }
+::-webkit-scrollbar-thumb { background: #DDE8EC; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #505D7B; }

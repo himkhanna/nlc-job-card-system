@@ -1,0 +1,9 @@
+.gradle/
+build/
+# Old .NET project artifacts — not used by the Gradle build
+src/NLC.API/
+src/NLC.Application/
+src/NLC.Core/
+src/NLC.Infrastructure/
+*.sln
+*.csproj

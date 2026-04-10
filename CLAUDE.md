@@ -31,14 +31,33 @@ reporting.
 - **API base:** `VITE_API_URL=https://api.nlc.yourdomain.com`
 
 ### Backend
-- **Runtime:** ASP.NET Core .NET 9 — Minimal API pattern
-- **ORM:** Entity Framework Core 9 — PostgreSQL provider
-- **Database:** PostgreSQL 16 — primary database
-- **Cache:** Redis (Valkey) — session cache
-- **Background jobs:** Hangfire — ERP push, GRN trigger
-- **Validation:** FluentValidation — request validation
-- **Logging:** Serilog + Seq — structured logging
-- **Auth:** JWT Bearer auth — role claims in token
+- **Runtime:** Java 21 + Spring Boot 3.3.x — REST controllers (`@RestController`)
+- **ORM:** Spring Data JPA + Hibernate 6 — PostgreSQL driver
+- **Database:** PostgreSQL 16 — standalone (outside Docker), Flyway migrations
+- **Cache:** Redis (Valkey) — Spring Data Redis + Lettuce client
+- **Background jobs:** Spring `@Async` — ERP push, GRN trigger (Phase 1 stubs)
+- **Validation:** Hibernate Validator (Jakarta Bean Validation — `@Valid`, `@NotBlank`)
+- **Logging:** Logback + SLF4J (Spring Boot default)
+- **Auth:** Spring Security + JJWT 0.12.x — role claims in token
+- **Build:** Gradle 8.x (single-module), packaged as fat jar (`app.jar`)
+- **API docs:** Springdoc OpenAPI — `/swagger-ui.html`, `/v3/api-docs`
+- **Default port:** 8080
+
+### Backend Package Structure
+```
+com.nlc/
+  NlcApplication.java
+  domain/
+    entity/       JPA entities (Warehouse, JobCard, Worker, etc.)
+    enums/        All enum definitions (Enums.java)
+  repository/     Spring Data JPA interfaces
+  service/        Business logic (AuthService, JobCardService, etc.)
+  web/
+    controller/   REST controllers
+    dto/          Java record DTOs (AuthDtos, JobDtos, etc.)
+  security/       JwtService, JwtAuthFilter, NlcUserPrincipal
+  config/         SecurityConfig (Spring Security + CORS)
+```
 
 ### Backend API Routes
 | Prefix | Purpose |
@@ -104,15 +123,19 @@ src/
 
 ### Backend
 ```
-src/
-  NLC.API/           Minimal API endpoints (route handlers, middleware, DI setup)
-  NLC.Core/          Domain models, interfaces, enums
-  NLC.Infrastructure/ EF Core DbContext, repositories, ERP HTTP client, Redis
-  NLC.Application/   Business logic services, FluentValidation validators
-tests/
-  NLC.UnitTests/
-  NLC.IntegrationTests/
-migrations/          EF Core migration files
+src/main/java/com/nlc/
+  NlcApplication.java
+  domain/entity/     JPA entities
+  domain/enums/      Enums.java (all enums)
+  repository/        Spring Data JPA interfaces
+  service/           Business logic services
+  web/controller/    REST controllers
+  web/dto/           Java record DTOs
+  security/          JWT, Spring Security filter
+  config/            SecurityConfig
+src/main/resources/
+  application.yml
+  db/migration/      V1__initial_schema.sql, V2__seed_data.sql
 ```
 
 ---

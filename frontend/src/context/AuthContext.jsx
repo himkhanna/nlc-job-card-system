@@ -7,7 +7,7 @@ const STORAGE_KEY = 'nlc_auth'
 
 // In development, Vite proxies /api → http://localhost:5144
 // In production, VITE_API_BASE_URL should be the backend base URL
-const API = import.meta.env.VITE_API_BASE_URL ?? ''
+const API = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
 
 // Demo users for offline dev (when backend is unavailable)
 const DEMO_USERS = {

@@ -22,11 +22,11 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:5144',
+        target: 'http://localhost:8080',
         changeOrigin: true,
       },
-      '/openapi': {
-        target: 'http://localhost:5144',
+      '/health': {
+        target: 'http://localhost:8080',
         changeOrigin: true,
       },
     },

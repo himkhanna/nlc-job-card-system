@@ -35,9 +35,9 @@ function FilterPill({ label, value, options, onChange }) {
       value={value}
       onChange={e => onChange(e.target.value)}
       style={{
-        height: 34, border: '1px solid #E8ECF2', borderRadius: 8,
-        padding: '0 10px', fontSize: 13, color: value === 'All' ? '#6B7A94' : '#1A2440',
-        fontFamily: 'DM Sans, sans-serif', background: '#fff', cursor: 'pointer',
+        height: 34, border: '1px solid #DDE8EC', borderRadius: 8,
+        padding: '0 10px', fontSize: 13, color: value === 'All' ? '#505D7B' : '#01323F',
+        fontFamily: 'Roboto, sans-serif', background: '#fff', cursor: 'pointer',
         fontWeight: value === 'All' ? 400 : 600, outline: 'none',
       }}
     >
@@ -112,24 +112,24 @@ export default function JobCards() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, fontFamily: 'DM Sans, sans-serif' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, fontFamily: 'Roboto, sans-serif' }}>
 
       {/* Toolbar */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
         {/* Search */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: 8,
-          background: '#fff', border: '1px solid #E8ECF2', borderRadius: 8,
+          background: '#fff', border: '1px solid #DDE8EC', borderRadius: 8,
           padding: '0 12px', height: 34, flex: '1 1 220px', maxWidth: 320,
         }}>
-          <Search size={14} color="#6B7A94" />
+          <Search size={14} color="#505D7B" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Job #, customer, container, ASN..."
-            style={{ border: 'none', outline: 'none', fontSize: 13, fontFamily: 'DM Sans, sans-serif', color: '#1A2440', width: '100%', background: 'transparent' }}
+            style={{ border: 'none', outline: 'none', fontSize: 13, fontFamily: 'Roboto, sans-serif', color: '#01323F', width: '100%', background: 'transparent' }}
           />
-          {search && <button onClick={() => setSearch('')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex' }}><X size={13} color="#6B7A94" /></button>}
+          {search && <button onClick={() => setSearch('')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex' }}><X size={13} color="#505D7B" /></button>}
         </div>
 
         <FilterPill label="Warehouse" value={warehouse} options={WAREHOUSES} onChange={setWarehouse} />
@@ -138,7 +138,7 @@ export default function JobCards() {
         <FilterPill label="Priority"  value={priority}  options={PRIORITIES}  onChange={setPriority}  />
 
         {hasFilters && (
-          <button onClick={clearFilters} style={{ height: 34, padding: '0 12px', border: '1px solid #E8ECF2', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 13, color: '#6B7A94', fontFamily: 'DM Sans, sans-serif', display: 'flex', alignItems: 'center', gap: 5 }}>
+          <button onClick={clearFilters} style={{ height: 34, padding: '0 12px', border: '1px solid #DDE8EC', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 13, color: '#505D7B', fontFamily: 'Roboto, sans-serif', display: 'flex', alignItems: 'center', gap: 5 }}>
             <X size={13} /> Clear
           </button>
         )}
@@ -147,20 +147,20 @@ export default function JobCards() {
 
         <button
           onClick={() => setShowNew(true)}
-          style={{ height: 36, padding: '0 16px', background: '#FF6B00', border: 'none', borderRadius: 8, color: '#fff', fontFamily: 'DM Sans, sans-serif', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+          style={{ height: 36, padding: '0 16px', background: '#FF7D44', border: 'none', borderRadius: 8, color: '#fff', fontFamily: 'Roboto, sans-serif', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
         >
           <Plus size={16} /> New Job Card
         </button>
       </div>
 
       {/* Results count */}
-      <div style={{ fontSize: 13, color: '#6B7A94' }}>
+      <div style={{ fontSize: 13, color: '#505D7B' }}>
         {isLoading ? 'Loading...' : `${filtered.length} job${filtered.length !== 1 ? 's' : ''} ${hasFilters ? 'matching filters' : 'total'}`}
         {isError && <span style={{ color: '#F57F17', marginLeft: 8 }}>· Demo data (API unavailable)</span>}
       </div>
 
       {/* Table */}
-      <div style={{ background: '#fff', border: '1px solid #E8ECF2', borderRadius: 12, overflow: 'hidden' }}>
+      <div style={{ background: '#fff', border: '1px solid #DDE8EC', borderRadius: 12, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ padding: 24 }}><LoadingSkeleton height={300} /></div>
         ) : filtered.length === 0 ? (
@@ -171,7 +171,7 @@ export default function JobCards() {
               <thead>
                 <tr style={{ background: '#F8F9FC' }}>
                   {['Job #', 'Customer', 'Warehouse', 'Type', 'Container / ASN / Order', 'Phase', 'Progress', 'Status', 'Priority', 'Created'].map(h => (
-                    <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#6B7A94', textTransform: 'uppercase', letterSpacing: '0.4px', whiteSpace: 'nowrap', borderBottom: '1px solid #E8ECF2' }}>
+                    <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#505D7B', textTransform: 'uppercase', letterSpacing: '0.4px', whiteSpace: 'nowrap', borderBottom: '1px solid #DDE8EC' }}>
                       {h}
                     </th>
                   ))}
@@ -182,14 +182,14 @@ export default function JobCards() {
                   <tr
                     key={job.id}
                     onClick={() => navigate(`/jobs/${job.id}`)}
-                    style={{ borderTop: i > 0 ? '1px solid #F4F6FA' : 'none', cursor: 'pointer' }}
+                    style={{ borderTop: i > 0 ? '1px solid #F2F8FA' : 'none', cursor: 'pointer' }}
                     onMouseEnter={e => e.currentTarget.style.background = '#F8F9FC'}
                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                   >
-                    <td style={{ padding: '12px 14px', fontFamily: 'DM Mono, monospace', fontSize: 13, color: '#1565C0', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '12px 14px', fontFamily: 'DM Mono, monospace', fontSize: 13, color: '#07847F', fontWeight: 600, whiteSpace: 'nowrap' }}>
                       {job.jobNumber}
                     </td>
-                    <td style={{ padding: '12px 14px', fontSize: 13, color: '#1A2440', fontWeight: 500 }}>
+                    <td style={{ padding: '12px 14px', fontSize: 13, color: '#01323F', fontWeight: 500 }}>
                       {job.customerName ?? job.customer}
                     </td>
                     <td style={{ padding: '12px 14px' }}>
@@ -198,10 +198,10 @@ export default function JobCards() {
                     <td style={{ padding: '12px 14px' }}>
                       <Badge variant={job.jobType ?? job.type} size="sm" />
                     </td>
-                    <td style={{ padding: '12px 14px', fontSize: 12, color: '#6B7A94', fontFamily: 'DM Mono, monospace' }}>
+                    <td style={{ padding: '12px 14px', fontSize: 12, color: '#505D7B', fontFamily: 'DM Mono, monospace' }}>
                       {job.containerNumber || job.asnNumber || job.orderNumber || '—'}
                     </td>
-                    <td style={{ padding: '12px 14px', fontSize: 12, color: '#6B7A94' }}>
+                    <td style={{ padding: '12px 14px', fontSize: 12, color: '#505D7B' }}>
                       {job.currentPhase ?? job.phase}
                     </td>
                     <td style={{ padding: '12px 14px', minWidth: 110 }}>
@@ -213,7 +213,7 @@ export default function JobCards() {
                     <td style={{ padding: '12px 14px' }}>
                       <Badge variant={job.priority} size="sm" />
                     </td>
-                    <td style={{ padding: '12px 14px', fontSize: 12, color: '#6B7A94', fontFamily: 'DM Mono, monospace', whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '12px 14px', fontSize: 12, color: '#505D7B', fontFamily: 'DM Mono, monospace', whiteSpace: 'nowrap' }}>
                       {job.createdAt ? new Date(job.createdAt).toLocaleDateString() : '—'}
                     </td>
                   </tr>
@@ -231,10 +231,10 @@ export default function JobCards() {
         title="Create New Job Card"
         footer={
           <>
-            <button onClick={() => setShowNew(false)} style={{ height: 36, padding: '0 16px', border: '1px solid #E8ECF2', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 13, fontFamily: 'DM Sans, sans-serif', color: '#6B7A94' }}>
+            <button onClick={() => setShowNew(false)} style={{ height: 36, padding: '0 16px', border: '1px solid #DDE8EC', borderRadius: 8, background: '#fff', cursor: 'pointer', fontSize: 13, fontFamily: 'Roboto, sans-serif', color: '#505D7B' }}>
               Cancel
             </button>
-            <button onClick={handleCreate} disabled={creating} style={{ height: 36, padding: '0 16px', background: '#FF6B00', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', cursor: 'pointer', opacity: creating ? 0.7 : 1 }}>
+            <button onClick={handleCreate} disabled={creating} style={{ height: 36, padding: '0 16px', background: '#FF7D44', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, fontFamily: 'Roboto, sans-serif', cursor: 'pointer', opacity: creating ? 0.7 : 1 }}>
               {creating ? 'Creating…' : 'Create Job Card'}
             </button>
           </>
@@ -248,34 +248,34 @@ export default function JobCards() {
             { label: 'Order Number', field: 'orderNumber', placeholder: 'e.g. ORD-58821' },
           ].map(f => (
             <div key={f.field}>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#1A2440', marginBottom: 5 }}>{f.label}</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#01323F', marginBottom: 5 }}>{f.label}</label>
               <input
                 value={newForm[f.field]}
                 onChange={e => setNewForm(p => ({ ...p, [f.field]: e.target.value }))}
                 placeholder={f.placeholder}
-                style={{ width: '100%', height: 38, border: '1px solid #E8ECF2', borderRadius: 8, padding: '0 12px', fontSize: 13, fontFamily: 'DM Sans, sans-serif', outline: 'none', boxSizing: 'border-box' }}
-                onFocus={e => e.target.style.borderColor = '#1565C0'}
-                onBlur={e => e.target.style.borderColor = '#E8ECF2'} />
+                style={{ width: '100%', height: 38, border: '1px solid #DDE8EC', borderRadius: 8, padding: '0 12px', fontSize: 13, fontFamily: 'Roboto, sans-serif', outline: 'none', boxSizing: 'border-box' }}
+                onFocus={e => e.target.style.borderColor = '#07847F'}
+                onBlur={e => e.target.style.borderColor = '#DDE8EC'} />
             </div>
           ))}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#1A2440', marginBottom: 5 }}>Job Type</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#01323F', marginBottom: 5 }}>Job Type</label>
               <select value={newForm.jobType} onChange={e => setNewForm(p => ({ ...p, jobType: e.target.value }))}
-                style={{ width: '100%', height: 38, border: '1px solid #E8ECF2', borderRadius: 8, padding: '0 10px', fontSize: 13, fontFamily: 'DM Sans, sans-serif', outline: 'none', background: '#fff' }}>
+                style={{ width: '100%', height: 38, border: '1px solid #DDE8EC', borderRadius: 8, padding: '0 10px', fontSize: 13, fontFamily: 'Roboto, sans-serif', outline: 'none', background: '#fff' }}>
                 <option value="INBOUND">INBOUND</option>
                 <option value="OUTBOUND">OUTBOUND</option>
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#1A2440', marginBottom: 5 }}>Priority</label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#01323F', marginBottom: 5 }}>Priority</label>
               <select value={newForm.priority} onChange={e => setNewForm(p => ({ ...p, priority: e.target.value }))}
-                style={{ width: '100%', height: 38, border: '1px solid #E8ECF2', borderRadius: 8, padding: '0 10px', fontSize: 13, fontFamily: 'DM Sans, sans-serif', outline: 'none', background: '#fff' }}>
+                style={{ width: '100%', height: 38, border: '1px solid #DDE8EC', borderRadius: 8, padding: '0 10px', fontSize: 13, fontFamily: 'Roboto, sans-serif', outline: 'none', background: '#fff' }}>
                 <option value="NORMAL">NORMAL</option><option value="HIGH">HIGH</option><option value="URGENT">URGENT</option>
               </select>
             </div>
           </div>
-          <p style={{ margin: 0, fontSize: 12, color: '#6B7A94', background: '#F4F6FA', border: '1px solid #E8ECF2', borderRadius: 8, padding: '8px 12px' }}>
+          <p style={{ margin: 0, fontSize: 12, color: '#505D7B', background: '#F2F8FA', border: '1px solid #DDE8EC', borderRadius: 8, padding: '8px 12px' }}>
             Job number will be auto-generated as <strong style={{ fontFamily: 'DM Mono, monospace' }}>JC-2025-XXXX</strong>. Phase sequence will be set from the selected job type config.
           </p>
         </div>

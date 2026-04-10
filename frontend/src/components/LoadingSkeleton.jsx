@@ -4,7 +4,7 @@ export default function LoadingSkeleton({ width = '100%', height = 16, borderRad
       width,
       height,
       borderRadius,
-      background: 'linear-gradient(90deg, #E8ECF2 25%, #F4F6FA 50%, #E8ECF2 75%)',
+      background: 'linear-gradient(90deg, #DDE8EC 25%, #F2F8FA 50%, #DDE8EC 75%)',
       backgroundSize: '200% 100%',
       animation: 'shimmer 1.4s infinite',
       display: 'inline-block',

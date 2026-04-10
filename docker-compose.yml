@@ -1,24 +1,12 @@
 version: "3.9"
 
-services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: nlc_postgres
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: nlc_jobcards
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+# PostgreSQL runs standalone outside Docker (not in this file).
+# Set SPRING_DATASOURCE_URL to point at your external PostgreSQL instance.
+# For local dev: jdbc:postgresql://host.docker.internal:5432/nlc_jobcards
+# For production: jdbc:postgresql://<your-pg-host>:5432/nlc_jobcards
 
+services:
+  # ── Redis ─────────────────────────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
     container_name: nlc_redis
@@ -33,6 +21,38 @@ services:
       timeout: 3s
       retries: 5
 
+  # ── CompreFace Database ───────────────────────────────────────────────────────
+  compreface-db:
+    image: postgres:16-alpine
+    container_name: nlc_compreface_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: compreface
+      POSTGRES_PASSWORD: ${COMPREFACE_DB_PASSWORD:-compreface_pw}
+      POSTGRES_DB: compreface
+    volumes:
+      - compreface_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U compreface"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ── CompreFace Face Recognition ───────────────────────────────────────────────
+  compreface:
+    image: exadel/compreface:latest
+    container_name: nlc_compreface
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      POSTGRES_URL: jdbc:postgresql://compreface-db:5432/compreface
+      POSTGRES_USER: compreface
+      POSTGRES_PASSWORD: ${COMPREFACE_DB_PASSWORD:-compreface_pw}
+    depends_on:
+      compreface-db:
+        condition: service_healthy
+
 volumes:
-  postgres_data:
   redis_data:
+  compreface_db_data:

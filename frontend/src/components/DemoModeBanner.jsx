@@ -13,7 +13,7 @@ export default function DemoModeBanner() {
       display: 'flex',
       alignItems: 'center',
       gap: 10,
-      fontFamily: 'DM Sans, sans-serif',
+      fontFamily: 'Roboto, sans-serif',
       fontSize: 13,
       color: '#5D4037',
       flexShrink: 0,

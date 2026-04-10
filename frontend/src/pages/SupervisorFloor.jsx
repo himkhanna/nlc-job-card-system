@@ -3,7 +3,6 @@ import { Clock, UserCheck, UserX, CheckCircle, AlertCircle, ChevronRight, Refres
 import toast from 'react-hot-toast'
 import Badge from '../components/Badge'
 import ProgressBar from '../components/ProgressBar'
-import DemoModeBanner from '../components/DemoModeBanner'
 
 // ── Demo data ─────────────────────────────────────────────────────────────────
 const ACTIVE_JOBS = [
@@ -88,16 +87,15 @@ export default function SupervisorFloor() {
 
   return (
     <div className="space-y-4 max-w-2xl mx-auto">
-      <DemoModeBanner />
 
       {/* Header strip */}
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-bold text-[#1A2440]">Floor View</h2>
-          <p className="text-sm text-[#6B7A94]">Live active jobs — DXB-WH1, DXB-WH2</p>
+          <h2 className="text-lg font-bold text-[#01323F]">Floor View</h2>
+          <p className="text-sm text-[#505D7B]">Live active jobs — DXB-WH1, DXB-WH2</p>
         </div>
         <button onClick={handleRefresh} disabled={refreshing}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#0B1D3A] rounded-lg disabled:opacity-60">
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#1C3F39] rounded-lg disabled:opacity-60">
           <RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} />
           Refresh
         </button>
@@ -111,21 +109,21 @@ export default function SupervisorFloor() {
       </div>
 
       {/* Available workers strip */}
-      <div className="bg-white rounded-xl border border-[#E8ECF2] overflow-hidden">
-        <div className="px-4 py-3 border-b border-[#E8ECF2] flex items-center justify-between">
-          <h3 className="font-semibold text-[#1A2440] text-sm">Available Workers</h3>
-          <span className="text-xs text-[#6B7A94]">{AVAILABLE_WORKERS.length} idle</span>
+      <div className="bg-white rounded-xl border border-[#DDE8EC] overflow-hidden">
+        <div className="px-4 py-3 border-b border-[#DDE8EC] flex items-center justify-between">
+          <h3 className="font-semibold text-[#01323F] text-sm">Available Workers</h3>
+          <span className="text-xs text-[#505D7B]">{AVAILABLE_WORKERS.length} idle</span>
         </div>
-        <div className="divide-y divide-[#E8ECF2]">
+        <div className="divide-y divide-[#DDE8EC]">
           {AVAILABLE_WORKERS.map(w => (
             <div key={w.id} className="px-4 py-3 flex items-center justify-between">
               <div>
-                <div className="font-medium text-sm text-[#1A2440]">{w.name}</div>
-                <div className="font-mono text-xs text-[#6B7A94]">{w.employeeId} · {w.warehouse}</div>
+                <div className="font-medium text-sm text-[#01323F]">{w.name}</div>
+                <div className="font-mono text-xs text-[#505D7B]">{w.employeeId} · {w.warehouse}</div>
               </div>
               <div className="flex items-center gap-1.5">
                 {w.skills.map(s => (
-                  <span key={s} className="px-2 py-0.5 text-xs rounded-full bg-[#E3F0FF] text-[#1565C0] font-medium">{s}</span>
+                  <span key={s} className="px-2 py-0.5 text-xs rounded-full bg-[#E3F0FF] text-[#07847F] font-medium">{s}</span>
                 ))}
                 <span className="w-2 h-2 rounded-full bg-[#2E7D32] ml-2" title="Available" />
               </div>
@@ -142,30 +140,30 @@ function JobCard({ job, onClockOut }) {
 
   const priorityColor = {
     URGENT: '#C62828',
-    HIGH:   '#FF6B00',
-    NORMAL: '#6B7A94',
-  }[job.priority] ?? '#6B7A94'
+    HIGH:   '#FF7D44',
+    NORMAL: '#505D7B',
+  }[job.priority] ?? '#505D7B'
 
   return (
-    <div className="bg-white rounded-xl border border-[#E8ECF2] overflow-hidden"
+    <div className="bg-white rounded-xl border border-[#DDE8EC] overflow-hidden"
       style={{ borderLeftWidth: 4, borderLeftColor: priorityColor }}>
       {/* Header */}
       <button onClick={() => setExpanded(e => !e)}
-        className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[#F4F6FA]/50 transition-colors">
+        className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[#F2F8FA]/50 transition-colors">
         <div className="flex items-center gap-3">
           <div>
-            <div className="font-mono font-bold text-sm text-[#1A2440]">{job.jobNumber}</div>
-            <div className="text-xs text-[#6B7A94]">{job.customerName} · {job.warehouse}</div>
+            <div className="font-mono font-bold text-sm text-[#01323F]">{job.jobNumber}</div>
+            <div className="text-xs text-[#505D7B]">{job.customerName} · {job.warehouse}</div>
           </div>
           <Badge variant={job.jobType} size="sm" />
           <Badge variant={job.priority} size="sm" />
         </div>
         <div className="flex items-center gap-3">
           <div className="text-right">
-            <div className="text-xs font-semibold text-[#1A2440]">{job.currentPhase}</div>
-            <div className="text-xs text-[#6B7A94]">{job.progressPercent}%</div>
+            <div className="text-xs font-semibold text-[#01323F]">{job.currentPhase}</div>
+            <div className="text-xs text-[#505D7B]">{job.progressPercent}%</div>
           </div>
-          <ChevronRight size={16} className={`text-[#6B7A94] transition-transform ${expanded ? 'rotate-90' : ''}`} />
+          <ChevronRight size={16} className={`text-[#505D7B] transition-transform ${expanded ? 'rotate-90' : ''}`} />
         </div>
       </button>
 
@@ -179,13 +177,13 @@ function JobCard({ job, onClockOut }) {
           {/* Clocked-in workers */}
           {job.clockedIn.length > 0 ? (
             <div className="space-y-2">
-              <div className="text-xs font-semibold text-[#6B7A94] uppercase tracking-wide mt-3">
+              <div className="text-xs font-semibold text-[#505D7B] uppercase tracking-wide mt-3">
                 Clocked In ({job.clockedIn.length})
               </div>
               {job.clockedIn.map(worker => (
                 <div key={worker.id} className="flex items-center justify-between bg-[#E8F5E9] rounded-lg px-3 py-2">
                   <div>
-                    <div className="font-medium text-sm text-[#1A2440]">{worker.name}</div>
+                    <div className="font-medium text-sm text-[#01323F]">{worker.name}</div>
                     <div className="font-mono text-xs text-[#2E7D32] flex items-center gap-1">
                       <Clock size={10} />
                       Since {worker.since} · {timeSince(worker.since)} elapsed
@@ -200,7 +198,7 @@ function JobCard({ job, onClockOut }) {
               ))}
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-xs text-[#6B7A94] mt-3 bg-[#F4F6FA] rounded-lg px-3 py-2">
+            <div className="flex items-center gap-2 text-xs text-[#505D7B] mt-3 bg-[#F2F8FA] rounded-lg px-3 py-2">
               <AlertCircle size={14} className="text-[#F57F17]" />
               No workers currently clocked in for this job
             </div>

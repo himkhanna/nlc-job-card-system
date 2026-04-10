@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import PageHeader from './PageHeader'
-import DemoModeBanner from './DemoModeBanner'
+import BottomNav from './BottomNav'
 
 const PAGE_TITLES = {
   '/':           { title: 'Dashboard',       subtitle: 'Operations overview' },
@@ -16,7 +16,6 @@ const PAGE_TITLES = {
 export default function Layout() {
   const location = useLocation()
 
-  // Match dynamic routes like /jobs/:id
   let meta = PAGE_TITLES[location.pathname]
   if (!meta && location.pathname.startsWith('/jobs/')) {
     meta = { title: 'Job Card Detail', subtitle: 'Phase tracking & workforce' }
@@ -24,15 +23,24 @@ export default function Layout() {
   meta = meta || { title: 'NLC Job Card System', subtitle: '' }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100svh', background: '#F4F6FA' }}>
-      <Sidebar />
+    <div className="flex min-h-svh bg-[#F2F8FA]">
+      {/* Sidebar — hidden on mobile, shown on md+ */}
+      <div className="hidden md:block">
+        <Sidebar />
+      </div>
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
-        <DemoModeBanner />
+      {/* Main content */}
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <PageHeader title={meta.title} subtitle={meta.subtitle} />
-        <main style={{ flex: 1, padding: 24, overflow: 'auto' }}>
+        {/* pb-16 on mobile to clear the bottom nav bar */}
+        <main className="flex-1 p-4 md:p-6 overflow-auto pb-20 md:pb-6">
           <Outlet />
         </main>
+      </div>
+
+      {/* Bottom nav — shown on mobile only */}
+      <div className="md:hidden">
+        <BottomNav />
       </div>
     </div>
   )

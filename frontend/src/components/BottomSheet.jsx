@@ -29,22 +29,22 @@ export default function BottomSheet({ open, onClose, title, children }) {
         maxHeight: '85vh',
         display: 'flex',
         flexDirection: 'column',
-        fontFamily: 'DM Sans, sans-serif',
+        fontFamily: 'Roboto, sans-serif',
         animation: 'slideUp 0.2s ease',
       }}>
         {/* Handle */}
         <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0 0' }}>
-          <div style={{ width: 36, height: 4, background: '#E8ECF2', borderRadius: 2 }} />
+          <div style={{ width: 36, height: 4, background: '#DDE8EC', borderRadius: 2 }} />
         </div>
         {/* Header */}
         <div style={{
           padding: '12px 20px 12px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          borderBottom: '1px solid #E8ECF2',
+          borderBottom: '1px solid #DDE8EC',
         }}>
-          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#1A2440' }}>{title}</h3>
+          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#01323F' }}>{title}</h3>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
-            <X size={18} color="#6B7A94" />
+            <X size={18} color="#505D7B" />
           </button>
         </div>
         {/* Body */}

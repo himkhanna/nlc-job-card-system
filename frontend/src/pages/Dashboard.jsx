@@ -24,7 +24,7 @@ const STATUS_LABELS = {
   COMPLETED: 'Completed',     REACTIVATED: 'Reactivated',
 }
 const STATUS_COLORS = {
-  PLANNED:     '#1565C0',
+  PLANNED:     '#07847F',
   IN_PROGRESS: '#2E7D32',
   COMPLETED:   '#1B5E20',
   REACTIVATED: '#F57F17',
@@ -35,10 +35,10 @@ function buildKpiFromJobs(jobList) {
   const completed = jobList.filter(j => j.status === 'COMPLETED')
   const inProgress = jobList.filter(j => j.status === 'IN_PROGRESS')
   return [
-    { label: 'Active Jobs',        value: active.length,    icon: ClipboardList, color: '#1565C0', subtext: `${inProgress.length} in progress` },
+    { label: 'Active Jobs',        value: active.length,    icon: ClipboardList, color: '#07847F', subtext: `${inProgress.length} in progress` },
     { label: 'Workers Clocked In', value: 5,                icon: Users,         color: '#2E7D32', subtext: 'Across active warehouses' },
     { label: 'Completed Today',    value: completed.length, icon: CheckCircle,   color: '#2E7D32', subtext: completed[0]?.customerName ?? '—' },
-    { label: 'Pending GRNs',       value: inProgress.filter(j => j.jobType === 'INBOUND').length, icon: AlertCircle, color: '#FF6B00', subtext: 'Awaiting Putaway' },
+    { label: 'Pending GRNs',       value: inProgress.filter(j => j.jobType === 'INBOUND').length, icon: AlertCircle, color: '#FF7D44', subtext: 'Awaiting Putaway' },
   ]
 }
 
@@ -48,7 +48,7 @@ function buildStatusChart(jobList) {
   return Object.entries(counts).map(([name, value]) => ({
     name: STATUS_LABELS[name] ?? name,
     value,
-    color: STATUS_COLORS[name] ?? '#6B7A94',
+    color: STATUS_COLORS[name] ?? '#505D7B',
   }))
 }
 
@@ -75,7 +75,7 @@ export default function Dashboard() {
   const recentJobs  = [...jobList].slice(0, 6)
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, fontFamily: 'DM Sans, sans-serif' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, fontFamily: 'Roboto, sans-serif' }}>
 
       {/* KPI Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
@@ -91,8 +91,8 @@ export default function Dashboard() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
 
         {/* Status pie */}
-        <div style={{ background: '#fff', border: '1px solid #E8ECF2', borderRadius: 12, padding: '20px 24px' }}>
-          <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: '#1A2440' }}>Job Status Breakdown</h3>
+        <div style={{ background: '#fff', border: '1px solid #DDE8EC', borderRadius: 12, padding: '20px 24px' }}>
+          <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: '#01323F' }}>Job Status Breakdown</h3>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie data={statusChart} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} paddingAngle={3}>
@@ -100,36 +100,36 @@ export default function Dashboard() {
               </Pie>
               <Tooltip formatter={(v, n) => [v + ' jobs', n]} />
               <Legend iconType="circle" iconSize={9}
-                formatter={v => <span style={{ fontSize: 12, color: '#1A2440' }}>{v}</span>} />
+                formatter={v => <span style={{ fontSize: 12, color: '#01323F' }}>{v}</span>} />
             </PieChart>
           </ResponsiveContainer>
         </div>
 
         {/* Phase bar */}
-        <div style={{ background: '#fff', border: '1px solid #E8ECF2', borderRadius: 12, padding: '20px 24px' }}>
-          <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: '#1A2440' }}>Jobs by Current Phase</h3>
+        <div style={{ background: '#fff', border: '1px solid #DDE8EC', borderRadius: 12, padding: '20px 24px' }}>
+          <h3 style={{ margin: '0 0 16px', fontSize: 14, fontWeight: 700, color: '#01323F' }}>Jobs by Current Phase</h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={phaseChart} barSize={28}>
-              <XAxis dataKey="phase" tick={{ fontSize: 11, fill: '#6B7A94' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#6B7A94' }} axisLine={false} tickLine={false} allowDecimals={false} />
-              <Tooltip cursor={{ fill: '#F4F6FA' }} formatter={v => [v + ' jobs', 'Active']} />
-              <Bar dataKey="jobs" fill="#1565C0" radius={[5, 5, 0, 0]} />
+              <XAxis dataKey="phase" tick={{ fontSize: 11, fill: '#505D7B' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: '#505D7B' }} axisLine={false} tickLine={false} allowDecimals={false} />
+              <Tooltip cursor={{ fill: '#F2F8FA' }} formatter={v => [v + ' jobs', 'Active']} />
+              <Bar dataKey="jobs" fill="#07847F" radius={[5, 5, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Recent Jobs */}
-      <div style={{ background: '#fff', border: '1px solid #E8ECF2', borderRadius: 12, overflow: 'hidden' }}>
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid #E8ECF2', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ background: '#fff', border: '1px solid #DDE8EC', borderRadius: 12, overflow: 'hidden' }}>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid #DDE8EC', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#1A2440' }}>Recent Job Cards</h3>
-            <p style={{ margin: '2px 0 0', fontSize: 12, color: '#6B7A94' }}>
+            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#01323F' }}>Recent Job Cards</h3>
+            <p style={{ margin: '2px 0 0', fontSize: 12, color: '#505D7B' }}>
               {isError ? 'Demo data — API unavailable' : 'Live data from backend'}
             </p>
           </div>
           <button onClick={() => navigate('/jobs')}
-            style={{ fontSize: 13, color: '#1565C0', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontFamily: 'DM Sans, sans-serif' }}>
+            style={{ fontSize: 13, color: '#07847F', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontFamily: 'Roboto, sans-serif' }}>
             View all →
           </button>
         </div>
@@ -142,7 +142,7 @@ export default function Dashboard() {
               <thead>
                 <tr style={{ background: '#F8F9FC' }}>
                   {['Job #', 'Customer', 'Warehouse', 'Type', 'Phase', 'Progress', 'Status', 'Priority'].map(h => (
-                    <th key={h} style={{ padding: '9px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#6B7A94', textTransform: 'uppercase', letterSpacing: '0.4px', whiteSpace: 'nowrap' }}>
+                    <th key={h} style={{ padding: '9px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#505D7B', textTransform: 'uppercase', letterSpacing: '0.4px', whiteSpace: 'nowrap' }}>
                       {h}
                     </th>
                   ))}
@@ -151,14 +151,14 @@ export default function Dashboard() {
               <tbody>
                 {recentJobs.map(job => (
                   <tr key={job.id} onClick={() => navigate(`/jobs/${job.id}`)}
-                    style={{ borderTop: '1px solid #F4F6FA', cursor: 'pointer' }}
+                    style={{ borderTop: '1px solid #F2F8FA', cursor: 'pointer' }}
                     onMouseEnter={e => e.currentTarget.style.background = '#F8F9FC'}
                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                    <td style={{ padding: '11px 16px', fontSize: 13, fontFamily: 'DM Mono, monospace', color: '#1565C0', fontWeight: 600 }}>{job.jobNumber}</td>
-                    <td style={{ padding: '11px 16px', fontSize: 13, color: '#1A2440' }}>{job.customerName}</td>
+                    <td style={{ padding: '11px 16px', fontSize: 13, fontFamily: 'DM Mono, monospace', color: '#07847F', fontWeight: 600 }}>{job.jobNumber}</td>
+                    <td style={{ padding: '11px 16px', fontSize: 13, color: '#01323F' }}>{job.customerName}</td>
                     <td style={{ padding: '11px 16px' }}><WarehouseBadge name={job.warehouse ?? job.warehouseName} /></td>
                     <td style={{ padding: '11px 16px' }}><Badge variant={job.jobType} size="sm" /></td>
-                    <td style={{ padding: '11px 16px', fontSize: 12, color: '#6B7A94' }}>{job.currentPhase}</td>
+                    <td style={{ padding: '11px 16px', fontSize: 12, color: '#505D7B' }}>{job.currentPhase}</td>
                     <td style={{ padding: '11px 16px', minWidth: 120 }}><ProgressBar percent={job.progressPercent} showLabel /></td>
                     <td style={{ padding: '11px 16px' }}><Badge variant={job.status} label={STATUS_LABELS[job.status]} size="sm" /></td>
                     <td style={{ padding: '11px 16px' }}><Badge variant={job.priority} size="sm" /></td>

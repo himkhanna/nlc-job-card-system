@@ -6,7 +6,6 @@ import {
   PieChart, Pie, Cell, Legend, LineChart, Line,
 } from 'recharts'
 import Badge from '../components/Badge'
-import DemoModeBanner from '../components/DemoModeBanner'
 
 // ── Demo data ─────────────────────────────────────────────────────────────────
 const JOBS_BY_WAREHOUSE = [
@@ -19,8 +18,8 @@ const JOBS_BY_WAREHOUSE = [
 
 const JOBS_BY_STATUS = [
   { name: 'Completed',   value: 38, color: '#2E7D32' },
-  { name: 'In Progress', value: 15, color: '#FF6B00' },
-  { name: 'Planned',     value: 6,  color: '#1565C0' },
+  { name: 'In Progress', value: 15, color: '#FF7D44' },
+  { name: 'Planned',     value: 6,  color: '#07847F' },
   { name: 'Reactivated', value: 2,  color: '#F57F17' },
 ]
 
@@ -63,37 +62,36 @@ export default function Reports() {
 
   return (
     <div className="space-y-5">
-      <DemoModeBanner />
 
       {/* Date range + export */}
-      <div className="flex items-center justify-between gap-3 flex-wrap bg-white rounded-xl border border-[#E8ECF2] p-4">
+      <div className="flex items-center justify-between gap-3 flex-wrap bg-white rounded-xl border border-[#DDE8EC] p-4">
         <div className="flex items-center gap-3">
-          <Calendar size={16} className="text-[#6B7A94]" />
-          <span className="text-sm font-medium text-[#6B7A94]">Date Range:</span>
+          <Calendar size={16} className="text-[#505D7B]" />
+          <span className="text-sm font-medium text-[#505D7B]">Date Range:</span>
           <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
-            className="px-3 py-1.5 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]" />
-          <span className="text-[#6B7A94]">—</span>
+            className="px-3 py-1.5 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]" />
+          <span className="text-[#505D7B]">—</span>
           <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
-            className="px-3 py-1.5 border border-[#E8ECF2] rounded-lg text-sm focus:outline-none focus:border-[#1565C0]" />
+            className="px-3 py-1.5 border border-[#DDE8EC] rounded-lg text-sm focus:outline-none focus:border-[#07847F]" />
         </div>
         <div className="flex items-center gap-2">
           <button onClick={handleExportCsv} disabled={exporting}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#1565C0] border border-[#1565C0] rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-60">
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#07847F] border border-[#07847F] rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-60">
             <Download size={14} /> Export CSV
           </button>
           <button onClick={handleExportPdf} disabled={exporting}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#0B1D3A] rounded-lg hover:bg-navy-800 transition-colors disabled:opacity-60">
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#1C3F39] rounded-lg hover:bg-navy-800 transition-colors disabled:opacity-60">
             <FileText size={14} /> Export PDF
           </button>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-[#F4F6FA] rounded-xl p-1 w-fit">
+      <div className="flex gap-1 bg-[#F2F8FA] rounded-xl p-1 w-fit">
         {TABS.map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)}
             className={`px-5 py-2 rounded-lg text-sm font-semibold transition-colors ${
-              activeTab === tab ? 'bg-white text-[#1A2440] shadow-sm' : 'text-[#6B7A94] hover:text-[#1A2440]'}`}>
+              activeTab === tab ? 'bg-white text-[#01323F] shadow-sm' : 'text-[#505D7B] hover:text-[#01323F]'}`}>
             {tab}
           </button>
         ))}
@@ -105,14 +103,14 @@ export default function Reports() {
           {/* Summary KPIs */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: 'Total Jobs (MTD)', value: '61',     color: '#1565C0', icon: BarChart2 },
+              { label: 'Total Jobs (MTD)', value: '61',     color: '#07847F', icon: BarChart2 },
               { label: 'Completed',        value: '38',     color: '#2E7D32', icon: TrendingUp },
-              { label: 'GRNs Generated',   value: '29',     color: '#FF6B00', icon: FileText },
-              { label: 'Total Labour Hrs', value: '1,842',  color: '#0B1D3A', icon: Calendar },
+              { label: 'GRNs Generated',   value: '29',     color: '#FF7D44', icon: FileText },
+              { label: 'Total Labour Hrs', value: '1,842',  color: '#1C3F39', icon: Calendar },
             ].map(kpi => (
-              <div key={kpi.label} className="bg-white rounded-xl border border-[#E8ECF2] p-4">
+              <div key={kpi.label} className="bg-white rounded-xl border border-[#DDE8EC] p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-[#6B7A94] uppercase tracking-wide">{kpi.label}</span>
+                  <span className="text-xs font-semibold text-[#505D7B] uppercase tracking-wide">{kpi.label}</span>
                   <kpi.icon size={16} style={{ color: kpi.color }} />
                 </div>
                 <div className="text-2xl font-bold" style={{ color: kpi.color }}>{kpi.value}</div>
@@ -122,45 +120,45 @@ export default function Reports() {
 
           <div className="grid grid-cols-2 gap-5">
             {/* Jobs by warehouse */}
-            <div className="bg-white rounded-xl border border-[#E8ECF2] p-5">
-              <h3 className="font-semibold text-[#1A2440] mb-4">Jobs by Warehouse</h3>
+            <div className="bg-white rounded-xl border border-[#DDE8EC] p-5">
+              <h3 className="font-semibold text-[#01323F] mb-4">Jobs by Warehouse</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={JOBS_BY_WAREHOUSE} barSize={18} barGap={4}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E8ECF2" />
-                  <XAxis dataKey="warehouse" tick={{ fontSize: 11, fill: '#6B7A94' }} />
-                  <YAxis tick={{ fontSize: 11, fill: '#6B7A94' }} />
-                  <Tooltip contentStyle={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12 }} />
-                  <Bar dataKey="inbound"  name="Inbound"  fill="#00ACC1" radius={[3,3,0,0]} />
-                  <Bar dataKey="outbound" name="Outbound" fill="#1565C0" radius={[3,3,0,0]} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#DDE8EC" />
+                  <XAxis dataKey="warehouse" tick={{ fontSize: 11, fill: '#505D7B' }} />
+                  <YAxis tick={{ fontSize: 11, fill: '#505D7B' }} />
+                  <Tooltip contentStyle={{ fontFamily: 'Roboto, sans-serif', fontSize: 12 }} />
+                  <Bar dataKey="inbound"  name="Inbound"  fill="#45C9C3" radius={[3,3,0,0]} />
+                  <Bar dataKey="outbound" name="Outbound" fill="#07847F" radius={[3,3,0,0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
 
             {/* Status breakdown */}
-            <div className="bg-white rounded-xl border border-[#E8ECF2] p-5">
-              <h3 className="font-semibold text-[#1A2440] mb-4">Status Breakdown</h3>
+            <div className="bg-white rounded-xl border border-[#DDE8EC] p-5">
+              <h3 className="font-semibold text-[#01323F] mb-4">Status Breakdown</h3>
               <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
                   <Pie data={JOBS_BY_STATUS} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ name, percent }) => `${name} ${(percent*100).toFixed(0)}%`} labelLine={false} fontSize={11}>
                     {JOBS_BY_STATUS.map((entry) => <Cell key={entry.name} fill={entry.color} />)}
                   </Pie>
-                  <Tooltip contentStyle={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12 }} />
+                  <Tooltip contentStyle={{ fontFamily: 'Roboto, sans-serif', fontSize: 12 }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
 
           {/* Weekly throughput */}
-          <div className="bg-white rounded-xl border border-[#E8ECF2] p-5">
-            <h3 className="font-semibold text-[#1A2440] mb-4">Weekly Throughput</h3>
+          <div className="bg-white rounded-xl border border-[#DDE8EC] p-5">
+            <h3 className="font-semibold text-[#01323F] mb-4">Weekly Throughput</h3>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={WEEKLY_THROUGHPUT}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E8ECF2" />
-                <XAxis dataKey="week" tick={{ fontSize: 12, fill: '#6B7A94' }} />
-                <YAxis tick={{ fontSize: 12, fill: '#6B7A94' }} />
-                <Tooltip contentStyle={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12 }} />
-                <Line type="monotone" dataKey="jobs"    name="Jobs"          stroke="#FF6B00" strokeWidth={2} dot={{ r: 4 }} />
-                <Line type="monotone" dataKey="workers" name="Workers Deployed" stroke="#1565C0" strokeWidth={2} dot={{ r: 4 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#DDE8EC" />
+                <XAxis dataKey="week" tick={{ fontSize: 12, fill: '#505D7B' }} />
+                <YAxis tick={{ fontSize: 12, fill: '#505D7B' }} />
+                <Tooltip contentStyle={{ fontFamily: 'Roboto, sans-serif', fontSize: 12 }} />
+                <Line type="monotone" dataKey="jobs"    name="Jobs"          stroke="#FF7D44" strokeWidth={2} dot={{ r: 4 }} />
+                <Line type="monotone" dataKey="workers" name="Workers Deployed" stroke="#07847F" strokeWidth={2} dot={{ r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -169,11 +167,11 @@ export default function Reports() {
 
       {/* Job Report tab */}
       {activeTab === 'Job Report' && (
-        <div className="bg-white rounded-xl border border-[#E8ECF2] overflow-hidden">
+        <div className="bg-white rounded-xl border border-[#DDE8EC] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#F4F6FA] text-xs font-semibold text-[#6B7A94] uppercase tracking-wide">
+                <tr className="bg-[#F2F8FA] text-xs font-semibold text-[#505D7B] uppercase tracking-wide">
                   <th className="px-5 py-3 text-left">Job #</th>
                   <th className="px-5 py-3 text-left">Customer</th>
                   <th className="px-5 py-3 text-left">Type</th>
@@ -184,25 +182,25 @@ export default function Reports() {
                   <th className="px-5 py-3 text-left">Completed</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E8ECF2]">
+              <tbody className="divide-y divide-[#DDE8EC]">
                 {RECENT_JOB_REPORT.map(r => (
-                  <tr key={r.jobNumber} className="hover:bg-[#F4F6FA]/50 transition-colors">
-                    <td className="px-5 py-3 font-mono text-[#1A2440]">{r.jobNumber}</td>
-                    <td className="px-5 py-3 font-medium text-[#1A2440]">{r.customer}</td>
+                  <tr key={r.jobNumber} className="hover:bg-[#F2F8FA]/50 transition-colors">
+                    <td className="px-5 py-3 font-mono text-[#01323F]">{r.jobNumber}</td>
+                    <td className="px-5 py-3 font-medium text-[#01323F]">{r.customer}</td>
                     <td className="px-5 py-3"><Badge variant={r.type} /></td>
                     <td className="px-5 py-3"><Badge variant={r.status} /></td>
-                    <td className="px-5 py-3 text-[#6B7A94]">{r.warehouse}</td>
-                    <td className="px-5 py-3 text-right font-mono text-[#1A2440]">{r.workerHours}h</td>
-                    <td className="px-5 py-3 text-right font-mono font-semibold text-[#1A2440]">{r.laborCost}</td>
-                    <td className="px-5 py-3 font-mono text-xs text-[#6B7A94]">{r.completedAt}</td>
+                    <td className="px-5 py-3 text-[#505D7B]">{r.warehouse}</td>
+                    <td className="px-5 py-3 text-right font-mono text-[#01323F]">{r.workerHours}h</td>
+                    <td className="px-5 py-3 text-right font-mono font-semibold text-[#01323F]">{r.laborCost}</td>
+                    <td className="px-5 py-3 font-mono text-xs text-[#505D7B]">{r.completedAt}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
-                <tr className="bg-[#F4F6FA] font-semibold">
-                  <td colSpan={5} className="px-5 py-3 text-[#1A2440]">Totals</td>
-                  <td className="px-5 py-3 text-right font-mono text-[#1A2440]">94h</td>
-                  <td className="px-5 py-3 text-right font-mono text-[#FF6B00]">AED 4,700</td>
+                <tr className="bg-[#F2F8FA] font-semibold">
+                  <td colSpan={5} className="px-5 py-3 text-[#01323F]">Totals</td>
+                  <td className="px-5 py-3 text-right font-mono text-[#01323F]">94h</td>
+                  <td className="px-5 py-3 text-right font-mono text-[#FF7D44]">AED 4,700</td>
                   <td />
                 </tr>
               </tfoot>
@@ -213,14 +211,14 @@ export default function Reports() {
 
       {/* Labour Report tab */}
       {activeTab === 'Labour Report' && (
-        <div className="bg-white rounded-xl border border-[#E8ECF2] overflow-hidden">
-          <div className="px-5 py-4 border-b border-[#E8ECF2]">
-            <p className="text-sm text-[#6B7A94]">Labour rate: <span className="font-mono font-semibold text-[#1A2440]">AED 50 / hr</span> (configure in Settings)</p>
+        <div className="bg-white rounded-xl border border-[#DDE8EC] overflow-hidden">
+          <div className="px-5 py-4 border-b border-[#DDE8EC]">
+            <p className="text-sm text-[#505D7B]">Labour rate: <span className="font-mono font-semibold text-[#01323F]">AED 50 / hr</span> (configure in Settings)</p>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#F4F6FA] text-xs font-semibold text-[#6B7A94] uppercase tracking-wide">
+                <tr className="bg-[#F2F8FA] text-xs font-semibold text-[#505D7B] uppercase tracking-wide">
                   <th className="px-5 py-3 text-left">Worker</th>
                   <th className="px-5 py-3 text-left">ID</th>
                   <th className="px-5 py-3 text-left">Type</th>
@@ -229,7 +227,7 @@ export default function Reports() {
                   <th className="px-5 py-3 text-right">Labour Cost</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E8ECF2]">
+              <tbody className="divide-y divide-[#DDE8EC]">
                 {[
                   { name: 'Rajan Pillai',       id: 'EMP-001', type: 'PERMANENT', jobs: 4, hours: 28, cost: 'AED 1,400' },
                   { name: 'Sabu Thomas',        id: 'EMP-002', type: 'PERMANENT', jobs: 4, hours: 32, cost: 'AED 1,600' },
@@ -237,22 +235,22 @@ export default function Reports() {
                   { name: 'Arjun Nair',         id: 'EMP-005', type: 'CONTRACT',  jobs: 2, hours: 12, cost: 'AED 600'   },
                   { name: 'Priya Menon',        id: 'EMP-006', type: 'PERMANENT', jobs: 1, hours: 4,  cost: 'AED 200'   },
                 ].map(r => (
-                  <tr key={r.id} className="hover:bg-[#F4F6FA]/50 transition-colors">
-                    <td className="px-5 py-3 font-medium text-[#1A2440]">{r.name}</td>
-                    <td className="px-5 py-3 font-mono text-xs text-[#6B7A94]">{r.id}</td>
+                  <tr key={r.id} className="hover:bg-[#F2F8FA]/50 transition-colors">
+                    <td className="px-5 py-3 font-medium text-[#01323F]">{r.name}</td>
+                    <td className="px-5 py-3 font-mono text-xs text-[#505D7B]">{r.id}</td>
                     <td className="px-5 py-3"><Badge variant={r.type} /></td>
-                    <td className="px-5 py-3 text-right font-mono text-[#1A2440]">{r.jobs}</td>
-                    <td className="px-5 py-3 text-right font-mono text-[#1A2440]">{r.hours}h</td>
-                    <td className="px-5 py-3 text-right font-mono font-semibold text-[#1A2440]">{r.cost}</td>
+                    <td className="px-5 py-3 text-right font-mono text-[#01323F]">{r.jobs}</td>
+                    <td className="px-5 py-3 text-right font-mono text-[#01323F]">{r.hours}h</td>
+                    <td className="px-5 py-3 text-right font-mono font-semibold text-[#01323F]">{r.cost}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
-                <tr className="bg-[#F4F6FA] font-semibold">
-                  <td colSpan={3} className="px-5 py-3 text-[#1A2440]">Total</td>
-                  <td className="px-5 py-3 text-right font-mono text-[#1A2440]">—</td>
-                  <td className="px-5 py-3 text-right font-mono text-[#1A2440]">94h</td>
-                  <td className="px-5 py-3 text-right font-mono text-[#FF6B00]">AED 4,700</td>
+                <tr className="bg-[#F2F8FA] font-semibold">
+                  <td colSpan={3} className="px-5 py-3 text-[#01323F]">Total</td>
+                  <td className="px-5 py-3 text-right font-mono text-[#01323F]">—</td>
+                  <td className="px-5 py-3 text-right font-mono text-[#01323F]">94h</td>
+                  <td className="px-5 py-3 text-right font-mono text-[#FF7D44]">AED 4,700</td>
                 </tr>
               </tfoot>
             </table>

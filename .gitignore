@@ -5,10 +5,16 @@ backend/**/obj/
 *.suo
 .vs/
 
+# Java / Gradle build outputs
+backend/build/
+backend/.gradle/
+backend/**/*.class
+
 # Frontend
 frontend/node_modules/
 frontend/dist/
 frontend/.env.local
+frontend/.vite/
 
 # Environment / secrets
 *.env

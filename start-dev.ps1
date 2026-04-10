@@ -1,37 +1,69 @@
-# NLC Job Card System — Dev Startup Script
-# Run: powershell -ExecutionPolicy Bypass -File start-dev.ps1
+# NLC Job Card System - Dev Startup Script
+# Usage: Double-click StartNLC.bat
 
-$dotnet = "C:\Program Files\dotnet\dotnet.exe"
-$root   = $PSScriptRoot
+$JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot"
+$GRADLE    = "C:\Gradle\gradle-9.4.1\bin\gradle.bat"
+$Root      = $PSScriptRoot
 
-Write-Host "`n=== NLC Job Card System — Dev Startup ===" -ForegroundColor Cyan
+$env:JAVA_HOME = $JAVA_HOME
+$env:Path      = "$JAVA_HOME\bin;C:\Gradle\gradle-9.4.1\bin;$env:Path"
 
-# 1. Start Docker services if Docker is available
-if (Get-Command docker -ErrorAction SilentlyContinue) {
-    Write-Host "`n[1/3] Starting PostgreSQL + Redis via Docker..." -ForegroundColor Yellow
-    docker compose up -d
+Write-Host ""
+Write-Host "======================================" -ForegroundColor Cyan
+Write-Host "  NLC Job Card System - Dev Startup   " -ForegroundColor Cyan
+Write-Host "======================================" -ForegroundColor Cyan
+Write-Host ""
+
+# 1. Docker services (Redis + CompreFace)
+Write-Host "[1/4] Starting Docker services..." -ForegroundColor Yellow
+Set-Location $Root
+docker compose up redis compreface-db compreface -d | Out-Null
+Write-Host "      Redis started" -ForegroundColor Green
+Write-Host "      CompreFace starting in background (takes 2-3 min, ready before you need it)" -ForegroundColor DarkYellow
+
+# 2. Backend (Spring Boot)
+Write-Host ""
+Write-Host "[2/3] Starting Spring Boot backend..." -ForegroundColor Yellow
+$backendCmd = "& { `$env:JAVA_HOME='$JAVA_HOME'; `$env:Path='$JAVA_HOME\bin;C:\Gradle\gradle-9.4.1\bin;' + `$env:Path; Set-Location '$Root\backend'; & '$GRADLE' bootRun }"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", $backendCmd -WindowStyle Normal
+
+$ready = $false
+for ($i = 0; $i -lt 60; $i++) {
     Start-Sleep -Seconds 3
+    try {
+        $r = Invoke-RestMethod -Uri "http://localhost:8080/health" -TimeoutSec 2 -ErrorAction Stop
+        if ($r.status -eq "healthy") { $ready = $true; break }
+    } catch { }
+    $secs = $i * 3
+    Write-Host "      Waiting for backend... (${secs}s)" -ForegroundColor Gray
+}
+if ($ready) {
+    Write-Host "      Backend is UP" -ForegroundColor Green
 } else {
-    Write-Host "`n[1/3] Docker not found — ensure PostgreSQL (port 5432) and Redis (port 6379) are running manually." -ForegroundColor Yellow
+    Write-Host "      Backend not responding - check the backend window" -ForegroundColor Red
 }
 
-# 2. Run EF migrations
-Write-Host "`n[2/3] Applying database migrations..." -ForegroundColor Yellow
-& $dotnet ef database update --project "$root\backend\src\NLC.Infrastructure" --startup-project "$root\backend\src\NLC.API"
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "  Migration failed — check PostgreSQL connection string in appsettings.json" -ForegroundColor Red
-}
+# 3. Frontend (Vite)
+Write-Host ""
+Write-Host "[3/3] Starting frontend..." -ForegroundColor Yellow
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "Set-Location '$Root\frontend'; npm run dev" -WindowStyle Normal
+Start-Sleep -Seconds 8
+$frontendPort = 3000
+Write-Host "      Frontend is UP" -ForegroundColor Green
 
-# 3. Start backend in a new window
-Write-Host "`n[3/3] Starting backend API on http://localhost:5144 ..." -ForegroundColor Yellow
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root\backend\src\NLC.API'; & '$dotnet' run"
-
-# 4. Start frontend
-Write-Host "`nStarting frontend on http://localhost:3000 ..." -ForegroundColor Yellow
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$root\frontend'; npm run dev"
-
-Write-Host "`n=== All services launching ===" -ForegroundColor Green
-Write-Host "  Backend:  http://localhost:5144" -ForegroundColor White
-Write-Host "  Frontend: http://localhost:3000" -ForegroundColor White
-Write-Host "  Health:   http://localhost:5144/health" -ForegroundColor White
-Write-Host "  API docs: http://localhost:5144/openapi/v1.json`n" -ForegroundColor White
+# Done
+Write-Host ""
+Write-Host "======================================" -ForegroundColor Cyan
+Write-Host "   All services ready!                " -ForegroundColor Cyan
+Write-Host "======================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "  App        -> http://localhost:$frontendPort" -ForegroundColor White
+Write-Host "  Backend    -> http://localhost:8080"          -ForegroundColor White
+Write-Host "  Swagger    -> http://localhost:8080/swagger-ui.html" -ForegroundColor White
+Write-Host "  CompreFace -> http://localhost:8000"          -ForegroundColor White
+Write-Host ""
+Write-Host "  admin@nlc.demo      / NLC@demo2025" -ForegroundColor Gray
+Write-Host "  supervisor@nlc.demo / NLC@demo2025" -ForegroundColor Gray
+Write-Host ""
+Write-Host "Press any key to close this window..."
+cmd /c pause | Out-Null
